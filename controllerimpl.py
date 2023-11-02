@@ -32,18 +32,9 @@ class Controller(OperationalController):
 class SetObjective(ControlModule):
     pass
 
+
+
 ctrl = Controller()
-cmap = ControlMap()
-executeSchedule = ExecuteSchedule()
-admit = Admit()
-r1 = Rule1()
-r2 = Rule2()
-
-ctrl.map = cmap
-cmap.rules = {'r1':r1, 'r2':r2}
-r1.target = {'t',[executeSchedule,admit]}
-r2.target = {'t',[admit]}
-
-
-def gefromtype():
-    pass
+ctrl.policies = [ExecuteSchedule(), Admit()]
+ctrl.map = ControlMap()
+ctrl.map.rules = [Rule1(), Rule2()]
