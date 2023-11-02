@@ -11,7 +11,7 @@ from pymoo.operators.mutation.inversion import InversionMutation
 from pymoo.operators.crossover.ox import OrderCrossover
 from pymoo.termination.default import DefaultSingleObjectiveTermination
 
-class Schedule(ControlPolicy):
+class GenerateSchedule(ControlPolicy):
     def run(df_orderpos):
         problem = OrderOptimizationProblem(df_orderpos)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
