@@ -78,13 +78,10 @@ class DigitalTwin():
             with open('results.json', 'w') as f:
                 json.dump(results, f)
             return
-        
-            
     def interface(self,request,taskResourceInformation:dict=None,controlUpdate=None,write=False)->None:
         self.synchronize(taskResourceInformation)
         self.update(controlUpdate)
-        self.simulate(request)
-        return
+        return self.simulate(request)
     def output_analysis(self,request)->dict:
         self.output_path
         df = pd.read_excel(fr"{self.output_path}\FinishTimes.xlsx")
