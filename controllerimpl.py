@@ -1,12 +1,10 @@
 from operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 
 
-from controller.policies.schedule import GenerateSchedule, ExecuteSchedule, Release
+from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller.smartController import SmartController
-       
-class SetWIP(ControlPolicy):
-    pass
-    
+from controller.modules import SetObjective, SetWIP
+
 
 class Rule1(ControlRule):
     trigger = 'new'
