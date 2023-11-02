@@ -2,7 +2,7 @@ from operationalController import ControlPolicy, ControlMap, ControlModule, Cont
 
 
 from controller.policies import GenerateSchedule, ExecuteSchedule, Release
-from controller.smartController import SmartController
+from controller import SmartController
 from controller.modules import SetObjective, SetWIP
 
 
