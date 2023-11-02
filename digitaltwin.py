@@ -48,6 +48,7 @@ class DigitalTwin():
         self.plantsim.start_simulation()       
         while not os.path.exists(os.path.join(self.output_path, self.filename)):
             time.sleep(0.1)
+        return
     def synchronize(self,taskResourceInformation:dict):
         #tbd
         df_orderpos = pd.read_excel(fr"{self.input_path}\MESb.xlsx", sheet_name="tblOrderPos")
@@ -61,13 +62,25 @@ class DigitalTwin():
     def update(self,controlUpdate:dict):
         controlUpdate['executeSchedule']
         controlUpdate['admission']
-    def simulate(self,request):
+    def simulate(self,request,write=False):
         configuration=pd.DataFrame()
         configuration['simLength'] = request['simLength']
         configuration.to_excel(fr"{self.input_path}\Configuration.xlsx", index=False)
-        for ii in request['nrOfSimul']:
-            pass
-    def interface(self,request,taskResourceInformation:dict=None,controlUpdate=None)->None:
+        results = dict()
+        for ii in range(request['nrOfSimul']):
+            self.plantsim_run()
+            results[ii] = self.output_analysis
+        if len(results) == 1:
+            results = results[1]
+        if not write:
+            return results
+        else:
+            with open('results.json', 'w') as f:
+                json.dump(results, f)
+            return
+        
+            
+    def interface(self,request,taskResourceInformation:dict=None,controlUpdate=None,write=False)->None:
         self.synchronize(taskResourceInformation)
         self.update(controlUpdate)
         self.simulate(request)
