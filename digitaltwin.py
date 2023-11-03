@@ -60,8 +60,16 @@ class DigitalTwin():
         df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
         df.to_excel(fr"{self.input_path}\OrdersTable.xlsx", index=False)
     def update(self,controlUpdate:dict):
-        controlUpdate['executeSchedule']
-        controlUpdate['admission']
+        try:
+            sequence = controlUpdate['executeSchedule']['sequence']
+            pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=False)
+        except:
+            pass
+        try:
+            CONWIP_value = controlUpdate['admission']['CONWIP_value']
+            pd.Series(CONWIP_value).to_excel(fr"{self.input_path}\ConwipValue.xlsx",index=False,header=False)
+        except:
+            pass
     def simulate(self,request,write=False):
         configuration=pd.DataFrame()
         configuration['simLength'] = request['simLength']
@@ -69,16 +77,16 @@ class DigitalTwin():
         results = dict()
         for ii in range(request['nrOfSimul']):
             self.plantsim_run()
-            results[ii] = self.output_analysis()
-        if len(results) == 1:
-            results = results[1]
+            results[ii] = self.output_analysis(request)
         if not write:
+            if len(results) == 1:
+                results = results[0]
             return results
         else:
             with open('results.json', 'w') as f:
                 json.dump(results, f)
             return
-    def interface(self,request,taskResourceInformation:dict=None,controlUpdate=None,write=False)->None:
+    def interface(self,taskResourceInformation:dict=None,controlUpdate=None,request=None,write=False)->None:
         self.synchronize(taskResourceInformation)
         self.update(controlUpdate)
         return self.simulate(request)
