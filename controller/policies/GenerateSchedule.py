@@ -17,7 +17,7 @@ class GenerateSchedule(ControlPolicy):
         ctrlUpdate = {"executeSchedule":{"sequence":[sequence]}}
         req = SimulationRequest()
         res = self.controller.dt.interface(None,ctrlUpdate,req)
-        return (res['average_TH'])
+        return (res['Cmax'])
 
     class OrderOptimizationProblem(Problem):
         def __init__(self,instance,df):

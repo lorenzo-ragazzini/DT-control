@@ -117,6 +117,8 @@ class DigitalTwin():
             # Calcola il consumo energetico totale
             total_energy_consumption = np.sum(df2.iloc[-1,1:].astype(float))
             data["total_energy_consumption"] = total_energy_consumption
+        if 'Cmax' in request['output'] or 'makespan' in request['output']:
+            data["Cmax"] = df.iloc[:, 1].max()
         return data
 
 
