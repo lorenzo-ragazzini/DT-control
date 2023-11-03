@@ -37,7 +37,7 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-            self.filename = "FinishTimes.xlsx"
+            self.filename = "FinishTimes.xlsx"        
     def start(self):
         self.plantsim = Plantsim(version = '16.0', license_type='Student')
         self.plantsim.load_model(self.model_path)
@@ -69,7 +69,7 @@ class DigitalTwin():
         results = dict()
         for ii in range(request['nrOfSimul']):
             self.plantsim_run()
-            results[ii] = self.output_analysis
+            results[ii] = self.output_analysis()
         if len(results) == 1:
             results = results[1]
         if not write:
