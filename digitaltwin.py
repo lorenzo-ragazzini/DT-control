@@ -7,7 +7,6 @@ import pandas as pd
 from plantsim.plantsim import Plantsim
 from plantsim.table import Table
 
-
 def plantsim_trigger():
     with open('config.json') as f:
         paths = json.load(f)
@@ -28,7 +27,6 @@ def plantsim_trigger():
 
     print(f"Il file nella cartella {output_path} è stato generato.")
     plantsim.quit()
-
 
 class DigitalTwin():
     def __init__(self) -> None:
@@ -120,5 +118,3 @@ class DigitalTwin():
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
             data["Cmax"] = df.iloc[:, 1].max()
         return data
-
-
