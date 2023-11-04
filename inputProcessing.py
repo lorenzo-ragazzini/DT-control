@@ -4,7 +4,7 @@ import json
 
 # from plantsim.plantsim import Plantsim
 # from plantsim.table import Table
-
+'''
 def running_orders():
     with open('config.json') as f:
         paths = json.load(f)
@@ -32,11 +32,12 @@ def running_orders():
     df_output = pd.concat([new_column, df_output], axis=1)
     df_output.to_excel(fr"{input_path}\WorkInProcess.xlsx", index=False)
     return(df_output)
-
+'''
 def input_load(dt):
     pass
 
-if __name__ == '__main__':
+
+def running_orders():
     with open('config.json') as f:
         paths = json.load(f)
         input_path = paths['input_path']
@@ -67,3 +68,8 @@ if __name__ == '__main__':
         else:
             tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order)].index,inplace=True)            
     tblStep_dataframe=tblStep_dataframe[['ONo','WPNo','Start','End']].fillna(0)
+    tblStep_dataframe.to_excel(fr"{input_path}\WorkInProcess.xlsx", index=False)
+    # return tblStep_dataframe
+    
+if __name__ == '__main__':
+    running_orders()
