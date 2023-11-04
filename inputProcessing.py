@@ -2,11 +2,14 @@ import pandas as pd
 import numpy as np
 import json
 
+from plantsim.plantsim import Plantsim
+from plantsim.table import Table
+
 def running_orders():
     with open('config.json') as f:
         paths = json.load(f)
         input_path = paths['input_path']
-    tblStep_dataframe = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblStepDef")
+    tblStep_dataframe = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblStep")
     # Trova l'indice delle righe in cui la colonna "name" non è vuota
     indici_righe_non_vuote = tblStep_dataframe[tblStep_dataframe["End"].notnull()].index
     valori_WPNo = tblStep_dataframe.loc[indici_righe_non_vuote, "WPNo"]
@@ -27,5 +30,40 @@ def running_orders():
     df_output = pd.DataFrame(output, columns=['WPNo', 'OpNo'])
     new_column = pd.Series(1, index=df_output.index, name="Number")
     df_output = pd.concat([new_column, df_output], axis=1)
-    df_output.to_excel(fr"{input_path}\RunningOrders_Table.xlsx", index=False)
+    df_output.to_excel(fr"{input_path}\WorkInProcess.xlsx", index=False)
     return(df_output)
+
+def input_load(dt:Plantsim):
+    pass
+
+if __name__ == '__main__':
+    with open('config.json') as f:
+        paths = json.load(f)
+        input_path = paths['input_path']
+    tblStep_dataframe = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblStep")
+    tblStep_dataframe['ONo'] = tblStep_dataframe['ONo'].astype(str)+'-'+tblStep_dataframe['OPos'].astype(str)
+    for order in tblStep_dataframe['ONo'].unique():
+        if tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['FirstStep']),'Start'].item() is not pd.NaT:
+            curstep = tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['FirstStep']==True),'StepNo'].item()
+            nextstep = None
+            while True:
+                if tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']==curstep),'End'] is not pd.NaT: 
+                    nextstep = tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']==curstep),'NextStepNo'].item()
+                    curstep = None
+                else:
+                    break
+                if tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']==nextstep),'Start'] is not pd.NaT:
+                    curstep = nextstep
+                    nextstep = None
+                else:
+                    break
+                if not tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']==curstep),'End'].any():
+                    break
+            if curstep:
+                step = curstep
+            else:
+                step = nextstep
+            tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']!=step)].index,inplace=True)            
+        else:
+            # tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order)].index,inplace=True)            
+            pass
