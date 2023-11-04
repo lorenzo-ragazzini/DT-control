@@ -49,8 +49,11 @@ class DigitalTwin():
         while not os.path.exists(os.path.join(self.output_path, self.filename)):
             time.sleep(0.1)
         return
-    def synchronize(self,taskResourceInformation:dict):
-        #tbd
+    def synchronize(self,taskResourceInformation:dict={}):
+        if not taskResourceInformation:
+            pass
+        else:
+            pass
         df_orderpos = pd.read_excel(fr"{self.input_path}\MESb.xlsx", sheet_name="tblOrderPos")
         df_orderpos=df_orderpos[df_orderpos.Start.isna()]
         #tbd
@@ -86,7 +89,7 @@ class DigitalTwin():
             with open('results.json', 'w') as f:
                 json.dump(results, f)
             return
-    def interface(self,taskResourceInformation:dict=None,controlUpdate=None,request=None,write=False)->None:
+    def interface(self,taskResourceInformation:dict={},controlUpdate=None,request=None,write=False)->None:
         self.synchronize(taskResourceInformation)
         self.update(controlUpdate)
         return self.simulate(request)
