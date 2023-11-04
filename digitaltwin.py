@@ -7,27 +7,6 @@ import pandas as pd
 from plantsim.plantsim import Plantsim
 from plantsim.table import Table
 
-def plantsim_trigger():
-    with open('config.json') as f:
-        paths = json.load(f)
-        model_path = paths['model_path']
-        output_path = paths['output_path']
-    plantsim = Plantsim(version = '16.0', license_type='Student')
-    plantsim.load_model(model_path)
-    plantsim.set_path_context('.Models.Model')
-    plantsim.set_event_controller()
-    plantsim.reset_simulation()
-    plantsim.start_simulation()
-
-    filename = "FinishTimes.xlsx"
-    output_path = os.path.join(output_path, filename)
-    
-    while not os.path.exists(output_path):
-        pass
-
-    print(f"Il file nella cartella {output_path} è stato generato.")
-    plantsim.quit()
-
 class DigitalTwin():
     def __init__(self) -> None:
         with open('config.json') as f:
@@ -51,9 +30,12 @@ class DigitalTwin():
         return
     def synchronize(self,taskResourceInformation:dict={}):
         if not taskResourceInformation:
-            pass
+            from controller.sync import planned_orders
+            df = planned_orders()
         else:
-            pass
+            df = pd.DataFrame(taskResourceInformation)
+            df.to_excel(fr"{self.input_path}\OrdersTable.xlsx", index=False)
+        '''
         df_orderpos = pd.read_excel(fr"{self.input_path}\MESb.xlsx", sheet_name="tblOrderPos")
         df_orderpos=df_orderpos[df_orderpos.Start.isna()]
         #tbd
@@ -62,6 +44,7 @@ class DigitalTwin():
         df['WPNo'] = df_orderpos['WPNo']
         df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
         df.to_excel(fr"{self.input_path}\OrdersTable.xlsx", index=False)
+        '''
     def update(self,controlUpdate:dict):
         try:
             sequence = controlUpdate['executeSchedule']['sequence']
