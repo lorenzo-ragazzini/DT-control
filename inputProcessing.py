@@ -36,7 +36,6 @@ def running_orders():
 def input_load(dt):
     pass
 
-
 def running_orders():
     with open('config.json') as f:
         paths = json.load(f)
