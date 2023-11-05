@@ -25,15 +25,14 @@ class OperationalController:
             self.execute(self[cp])
     def execute(self,cp:ControlPolicy):
         pars = cp.getInputParamters()
-        input = self._search(pars)
+        input = self.search(pars)
         dv = cp(input=input)
         self.decisionVariables.update(dv)
         self.saveDecisionVariables()
     def saveDecisionVariables(self):
         with open('dv.json', 'w') as f: 
             json.dump(self.decisionVariables, f)
-    @abstractmethod
-    def _search(self,input:Iterable[str]) -> List[Any]:
+    def search(self,input:Iterable[str]) -> List[Any]:
         return dict(ChainMap(*[{el:self.systemModel[el]} for el in input]))
     def __getattr__(self,attr):
         try:
