@@ -1,5 +1,5 @@
 from operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
-
+from digitaltwin import DigitalTwin
 
 from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller import SmartController
@@ -18,10 +18,11 @@ class Controller(OperationalController):
 class SetObjective(ControlModule):
     pass
 
-
-
-ctrl = Controller()
-ctrl.dt = 1
-ctrl.policies = [ExecuteSchedule(), Release()]
-ctrl.map = ControlMap()
-ctrl.map.rules = [Rule1(), Rule2()]
+if __name__ == '__main__':
+    dt = DigitalTwin()
+    # dt.start()
+    ctrl = Controller()
+    ctrl.dt = dt
+    ctrl.policies = [ExecuteSchedule(), Release()]
+    ctrl.map = ControlMap()
+    ctrl.map.rules = [Rule1(), Rule2()]
