@@ -31,9 +31,6 @@ class SmartController(SmartController):
         self.decisionVariables['admission'] = [False for i in range(len(self.decisionVariables['sequence']))]
         self.systemModel.update({'WIP':0})
 
-class SetObjective(ControlModule):
-    pass
-
 if __name__ == '__main__':
     dt = DigitalTwin()
     # dt.start()
@@ -43,7 +40,7 @@ if __name__ == '__main__':
     ctrl.linkPolicies()
 
     ctrl.map = ControlMap()
-    ctrl.map.rules = [Rule1(), Rule2()]
+    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
 
     ctrl.send('start')
     ctrl.send('new')
