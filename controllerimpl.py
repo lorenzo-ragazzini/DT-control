@@ -25,7 +25,7 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-class Controller(SmartController):
+class SmartController(SmartController):
     def __init__(self):
         self.decisionVariables = {'sequence':[]}
         self.decisionVariables['admission'] = [False for i in range(len(self.decisionVariables['sequence']))]
@@ -37,7 +37,7 @@ class SetObjective(ControlModule):
 if __name__ == '__main__':
     dt = DigitalTwin()
     # dt.start()
-    ctrl = Controller()
+    ctrl = SmartController()
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5)]
     ctrl.linkPolicies()
