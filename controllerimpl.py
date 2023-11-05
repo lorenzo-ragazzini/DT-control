@@ -5,9 +5,6 @@ from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller import SmartController
 from controller.modules import SetObjective, SetWIP
 
-
-
-
 class Rule1(ControlRule):
     trigger = 'new'
     def run(self,event):
@@ -21,7 +18,12 @@ class Rule2(ControlRule):
 class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
-        return [GenerateSchedule()]
+        return [SetWIP,GenerateSchedule]
+    
+class Rule4(ControlRule):
+    trigger = '?'
+    def run(self,event):
+        return [SetObjective]
 
 class Controller(SmartController):
     def __init__(self):
@@ -39,10 +41,9 @@ if __name__ == '__main__':
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5)]
     ctrl.linkPolicies()
-    
-    # ctrl.addPolicy(ExecuteSchedule)
-    # ctrl.addPolicy(Release)
+
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2()]
 
+    ctrl.send('start')
     ctrl.send('new')
