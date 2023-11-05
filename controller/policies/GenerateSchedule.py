@@ -36,7 +36,8 @@ class GenerateSchedule(ControlPolicy):
                 fitness_values[i, 0] = (-1.0) * throughput
             out["F"] = fitness_values
             return fitness_values 
-    def run(self,df_orderpos):
+        
+    def solve(self,df_orderpos):
         problem = self.OrderOptimizationProblem(self,df_orderpos)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)

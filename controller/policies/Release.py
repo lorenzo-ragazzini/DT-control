@@ -7,5 +7,8 @@ class Release(ControlPolicy):
     inputParameters = ['WIP']
     def __init__(self):
         self.WIPlimit = inf
-    def run(self,WIP):
-        return WIP < self.WIPlimit
+    def solve(self,sequence,WIP):
+        dv = [False for i in range(len(sequence))]
+        if WIP < self.WIPlimit:
+            dv[0] = True
+        return {'admission' : dv}

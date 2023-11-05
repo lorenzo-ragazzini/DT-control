@@ -1,8 +1,19 @@
-from typing import List, Dict, Any, Union, Iterable
+from typing import List, Dict, Any, Union, Iterable, Type
 from abc import ABC, abstractmethod
-from .ControlPolicy import ControlPolicy
-from .ControlModule import ControlModule
+from .controlPolicy import ControlPolicy
+from .controlModule import ControlModule
 
+class ControlRule:
+    trigger:None
+    target:Iterable[Type]
+    def __call__(self,event) -> Iterable[ControlPolicy]:
+        if event == self.trigger:
+            return self.run(event)
+    @abstractmethod
+    def run(self,event) -> Iterable[ControlPolicy]:
+        pass
+    
+'''
 class ControlRule:
     trigger:None
     target:Dict[str,Iterable[Union[ControlPolicy,ControlModule]]]
@@ -10,5 +21,6 @@ class ControlRule:
         if event == self.trigger:
             self.run(event)
     @abstractmethod
-    def run(self) -> Iterable[ControlPolicy]:
+    def run(self,event) -> Iterable[ControlPolicy]:
         pass
+'''

@@ -8,11 +8,15 @@ from controller.modules import SetObjective, SetWIP
 
 class Rule1(ControlRule):
     trigger = 'new'
-
+    def run(self,event):
+        return [Release,ExecuteSchedule]
+        
 class Rule2(ControlRule):
     trigger = 'completion'
+    def run(self,event):
+        return None
 
-class Controller(OperationalController):
+class Controller(SmartController):
     pass
 
 class SetObjective(ControlModule):
@@ -23,6 +27,10 @@ if __name__ == '__main__':
     # dt.start()
     ctrl = Controller()
     ctrl.dt = dt
-    ctrl.policies = [ExecuteSchedule(), Release()]
+    # ctrl.policies = [ExecuteSchedule(ctrl), Release(ctrl)]
+    ctrl.addPolicy(ExecuteSchedule)
+    ctrl.addPolicy(Release)
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2()]
+
+    ctrl.send('new')
