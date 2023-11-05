@@ -6,6 +6,8 @@ from controller import SmartController
 from controller.modules import SetObjective, SetWIP
 
 
+
+
 class Rule1(ControlRule):
     trigger = 'new'
     def run(self,event):
@@ -14,12 +16,18 @@ class Rule1(ControlRule):
 class Rule2(ControlRule):
     trigger = 'completion'
     def run(self,event):
-        return None
+        return []
+    
+class Rule3(ControlRule):
+    trigger = 'start'
+    def run(self,event):
+        return [GenerateSchedule()]
 
 class Controller(SmartController):
     def __init__(self):
         self.decisionVariables = {'sequence':[]}
         self.decisionVariables['admission'] = [False for i in range(len(self.decisionVariables['sequence']))]
+        self.systemModel.update({'WIP':0})
 
 class SetObjective(ControlModule):
     pass

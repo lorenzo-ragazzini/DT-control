@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union, Iterable, Type
 from abc import ABC, abstractmethod
+from collections import ChainMap
 from .controlMap import ControlMap
 from .controlPolicy import ControlPolicy
 from .controlModule import ControlModule
@@ -24,11 +25,11 @@ class OperationalController:
     def _execute(self,cp:ControlPolicy):
         pars = cp.getInputParamters()
         input = self._search(pars)
-        dv = cp(input)
+        dv = cp(input=input)
         self.decisionVariables.update(dv)
     @abstractmethod
     def _search(self,input:Iterable[str]) -> List[Any]:
-        return [self._systemModel[el] for el in input]
+        return dict(ChainMap(*[{el:self.systemModel[el]} for el in input]))
     def __getattr__(self,attr):
         try:
             value = [p for p in self.policies+self.modules if p.__class__.__name__ is attr]
