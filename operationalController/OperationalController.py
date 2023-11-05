@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union, Iterable, Type
 from abc import ABC, abstractmethod
+import json
 from collections import ChainMap
 from .controlMap import ControlMap
 from .controlPolicy import ControlPolicy
@@ -21,12 +22,16 @@ class OperationalController:
     def send(self,event):
         policies:Iterable[Type[ControlPolicy]] = self.map(event)
         for cp in policies:
-            self._execute(self[cp])
-    def _execute(self,cp:ControlPolicy):
+            self.execute(self[cp])
+    def execute(self,cp:ControlPolicy):
         pars = cp.getInputParamters()
         input = self._search(pars)
         dv = cp(input=input)
         self.decisionVariables.update(dv)
+        self.saveDecisionVariables()
+    def saveDecisionVariables(self):
+        with open('dv.json', 'w') as f: 
+            json.dump(self.decisionVariables, f)
     @abstractmethod
     def _search(self,input:Iterable[str]) -> List[Any]:
         return dict(ChainMap(*[{el:self.systemModel[el]} for el in input]))

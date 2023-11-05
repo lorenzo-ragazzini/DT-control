@@ -5,6 +5,8 @@ class ExecuteSchedule(ControlPolicy):
     # sequence
     def solve(self,*args,**kwargs):
         sequence = self._controller.decisionVariables['sequence']
+        admission = self._controller.decisionVariables['admission']
         if len(sequence)>0:
-            self.sequence.pop(0)
-            return {'sequence' : self.sequence}
+            admission.pop(0)
+            sequence.pop(0)
+            return {'sequence' : sequence, 'admission' : admission}
