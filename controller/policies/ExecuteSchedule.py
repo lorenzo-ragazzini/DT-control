@@ -4,6 +4,7 @@ from operationalController import ControlPolicy
 class ExecuteSchedule(ControlPolicy):
     # sequence
     def solve(self):
-        if len(self.sequence)>0:
+        sequence = self._controller.decisionVariables['sequence']
+        if len(sequence)>0:
             self.sequence.pop(0)
             return {'sequence' : self.sequence}

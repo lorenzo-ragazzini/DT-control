@@ -17,7 +17,9 @@ class Rule2(ControlRule):
         return None
 
 class Controller(SmartController):
-    pass
+    def __init__(self):
+        self.decisionVariables = {'sequence':[]}
+        self.decisionVariables['admission'] = [False for i in range(len(self.decisionVariables['sequence']))]
 
 class SetObjective(ControlModule):
     pass
@@ -27,9 +29,11 @@ if __name__ == '__main__':
     # dt.start()
     ctrl = Controller()
     ctrl.dt = dt
-    # ctrl.policies = [ExecuteSchedule(ctrl), Release(ctrl)]
-    ctrl.addPolicy(ExecuteSchedule)
-    ctrl.addPolicy(Release)
+    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5)]
+    ctrl.linkPolicies()
+    
+    # ctrl.addPolicy(ExecuteSchedule)
+    # ctrl.addPolicy(Release)
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2()]
 

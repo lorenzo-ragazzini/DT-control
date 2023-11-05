@@ -9,10 +9,14 @@ class OperationalController:
     policies:Iterable[ControlPolicy] = list()
     modules:Iterable[ControlModule] = list()
     decisionVariables = dict()
+    systemModel = {}
     def addPolicy(self,Cp:Type[ControlPolicy]):
         self.policies.append(Cp(self))
     def addModule(self,Cm:Type[ControlModule]):
         self.modules.append(Cm(self))
+    def linkPolicies(self):
+        for cp in self.policies+self.modules:
+            cp._controller = self
     def send(self,event):
         policies:Iterable[Type[ControlPolicy]] = self.map(event)
         for cp in policies:
@@ -24,7 +28,7 @@ class OperationalController:
         self.decisionVariables.update(dv)
     @abstractmethod
     def _search(self,input:Iterable[str]) -> List[Any]:
-        pass
+        return [self._systemModel[el] for el in input]
     def __getattr__(self,attr):
         try:
             value = [p for p in self.policies+self.modules if p.__class__.__name__ is attr]
