@@ -5,9 +5,12 @@ from .controlPolicy import ControlPolicy
 
 class ControlModule:
     target:Dict[str,Iterable[Any]]
+    inputParameters:List[str] = list()
     _controller = None
     def __call__(self,*args,**kwargs):
         return self.run(*args,**kwargs)
     @abstractmethod
     def run(self,*args,**kwargs):
         pass
+    def getInputParamters(self):
+        return self.inputParameters

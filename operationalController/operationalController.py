@@ -23,12 +23,17 @@ class OperationalController:
         policies:Iterable[Type[Union[ControlPolicy,ControlModule]]] = self.map(event)
         for cp in policies:
             self.execute(self[cp])
-    def execute(self,cp:ControlPolicy):
-        pars = cp.getInputParamters()
+    def execute(self,c:ControlPolicy):
+        pars = c.getInputParamters()
         input = self.search(pars)
-        dv = cp(input=input)
-        self.decisionVariables.update(dv)
-        self.saveDecisionVariables()
+        if issubclass(ControlPolicy,type(c)):
+            dv = c(input=input)
+            self.decisionVariables.update(dv)
+            self.saveDecisionVariables()
+        else:
+            policies = c(input=input)
+            for cc in policies:
+                self.execute(self[cc])
     def saveDecisionVariables(self):
         with open('dv.json', 'w') as f: 
             json.dump(self.decisionVariables, f)

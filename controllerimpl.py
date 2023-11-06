@@ -19,7 +19,7 @@ class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
         return [SetWIP,GenerateSchedule]
-    
+
 class Rule4(ControlRule):
     trigger = '?'
     def run(self,event):
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # dt.start()
     ctrl = SmartController()
     ctrl.dt = dt
-    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5)]
+    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
 
     ctrl.map = ControlMap()
