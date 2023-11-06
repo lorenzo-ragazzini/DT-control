@@ -25,17 +25,11 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-class SmartController(SmartController):
-    def __init__(self):
-        self.decisionVariables = {'sequence':[]}
-        self.decisionVariables['admission'] = [False for i in range(len(self.decisionVariables['sequence']))]
-        self.systemModel.update({'WIP':0})
-
 if __name__ == '__main__':
 
     from controller.sync import planned_orders
     planned_orders()
-    
+
     dt = DigitalTwin()
     # dt.start()
     ctrl = SmartController()
