@@ -1,5 +1,5 @@
 from operationalController import OperationalController
-from sync import planned_orders
+from .sync import planned_orders
 
 class SmartController(OperationalController):
     dt = None

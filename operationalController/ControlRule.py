@@ -11,7 +11,7 @@ class ControlRule:
             return self.run(event)
     @abstractmethod
     def run(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
-        pass
+        return []
     
 '''
 class ControlRule:

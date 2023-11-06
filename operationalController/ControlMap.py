@@ -5,8 +5,10 @@ from .controlRule import ControlRule
 class ControlMap(ABC):
     rules:List[ControlRule]
     def __call__(self,event):
+        policies = []
         for rule in self.rules:
-            return rule(event)
+            policies += rule(event)
+        return policies
 '''
 class ControlMap(ABC):
     rules:Dict[str,ControlRule]
