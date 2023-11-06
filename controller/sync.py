@@ -43,6 +43,7 @@ def planned_orders(simple=False):
     print(f"Order_Table has been created")
     return df_orders
 
+'''
 def planned_orders_simplified():
     with open('config.json') as f:
         paths = json.load(f)
@@ -55,3 +56,4 @@ def planned_orders_simplified():
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
     df.to_excel(fr"{input_path}\Order_Table.xlsx", index=False)
     return df
+'''
