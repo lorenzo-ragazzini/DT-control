@@ -9,9 +9,11 @@ class ControlRule:
     def __call__(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
         if event == self.trigger:
             return self.run(event)
+        else:
+            return []
     @abstractmethod
     def run(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
-        return []
+        return None
     
 '''
 class ControlRule:
