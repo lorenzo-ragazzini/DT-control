@@ -22,7 +22,7 @@ class DigitalTwin():
         self.plantsim.set_event_controller()
     def plantsim_run(self):
         for file in os.listdir(self.output_path):
-            os.remove(self.output_path+file)
+            os.remove(self.output_path+'/'+file)
         self.plantsim.reset_simulation()
         self.plantsim.start_simulation()       
         while not os.path.exists(os.path.join(self.output_path, self.filename)):

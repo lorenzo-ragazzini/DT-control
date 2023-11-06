@@ -13,10 +13,11 @@ from pymoo.operators.crossover.ox import OrderCrossover
 from pymoo.termination.default import DefaultSingleObjectiveTermination
 
 class GenerateSchedule(ControlPolicy):
+    inputParameters = ['orders']
     def fitness_function(self,sequence):
         ctrlUpdate = {"executeSchedule":{"sequence":[sequence]}}
         req = SimulationRequest()
-        res = self.controller.dt.interface(None,ctrlUpdate,req)
+        res = self._controller.dt.interface(None,ctrlUpdate,req)
         return (res['Cmax'])
 
     class OrderOptimizationProblem(Problem):
@@ -37,7 +38,8 @@ class GenerateSchedule(ControlPolicy):
             out["F"] = fitness_values
             return fitness_values 
         
-    def solve(self,df_orderpos,**kwargs):
+    def solve(self,**kwargs):
+        df_orderpos = kwargs['input']
         problem = self.OrderOptimizationProblem(self,df_orderpos)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)

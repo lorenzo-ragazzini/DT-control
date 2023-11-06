@@ -26,7 +26,7 @@ class OperationalController:
     def execute(self,c:ControlPolicy):
         pars = c.getInputParamters()
         input = self.search(pars)
-        if issubclass(ControlPolicy,type(c)):
+        if issubclass(type(c),ControlPolicy):
             dv = c(input=input)
             self.decisionVariables.update(dv)
             self.saveDecisionVariables()
