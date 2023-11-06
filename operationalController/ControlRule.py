@@ -6,11 +6,11 @@ from .controlModule import ControlModule
 class ControlRule:
     trigger:None
     target:Iterable[Type]
-    def __call__(self,event) -> Iterable[ControlPolicy]:
+    def __call__(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
         if event == self.trigger:
             return self.run(event)
     @abstractmethod
-    def run(self,event) -> Iterable[ControlPolicy]:
+    def run(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
         pass
     
 '''

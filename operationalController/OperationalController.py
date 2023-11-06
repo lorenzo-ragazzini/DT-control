@@ -20,7 +20,7 @@ class OperationalController:
         for cp in self.policies+self.modules:
             cp._controller = self
     def send(self,event):
-        policies:Iterable[Type[ControlPolicy]] = self.map(event)
+        policies:Iterable[Type[Union[ControlPolicy,ControlModule]]] = self.map(event)
         for cp in policies:
             self.execute(self[cp])
     def execute(self,cp:ControlPolicy):

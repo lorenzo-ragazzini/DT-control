@@ -6,7 +6,8 @@ from .controlPolicy import ControlPolicy
 class ControlModule:
     target:Dict[str,Iterable[Any]]
     _controller = None
-    def __init__(self,controller=None):
-        self.controller = controller 
     def __call__(self,*args,**kwargs):
+        return self.run(*args,**kwargs)
+    @abstractmethod
+    def run(self,*args,**kwargs):
         pass

@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union, Iterable
 from abc import ABC, abstractmethod
+from warnings import warn
 
 class ControlPolicy:
     # def __init__(self,controller=None):
@@ -20,7 +21,8 @@ class ControlPolicy:
             self.controlParameters[key]=value
             setattr(self,key,value)
         else:
-            return 'error'
+            msg=f'Cannot assign {value} to {key}. Control paramter {key} not found.'
+            warn(message=msg,category=RuntimeWarning,stacklevel=int(10e10))
     @abstractmethod
     def solve(self,*args,**kwargs):
         pass
