@@ -35,16 +35,6 @@ class DigitalTwin():
         else:
             df = pd.DataFrame(taskResourceInformation)
             df.to_excel(fr"{self.input_path}\Order_Table.xlsx", index=False)
-        '''
-        df_orderpos = pd.read_excel(fr"{self.input_path}\MESb.xlsx", sheet_name="tblOrderPos")
-        df_orderpos=df_orderpos[df_orderpos.Start.isna()]
-        #tbd
-        df = pd.DataFrame()
-        df['Number']=1
-        df['WPNo'] = df_orderpos['WPNo']
-        df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-        df.to_excel(fr"{self.input_path}\OrdersTable.xlsx", index=False)
-        '''
     def update(self,controlUpdate:dict):
         try:
             sequence = controlUpdate['executeSchedule']['sequence']
