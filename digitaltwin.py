@@ -34,7 +34,7 @@ class DigitalTwin():
             df = planned_orders()
         else:
             df = pd.DataFrame(taskResourceInformation)
-            df.to_excel(fr"{self.input_path}\OrdersTable.xlsx", index=False)
+            df.to_excel(fr"{self.input_path}\Order_Table.xlsx", index=False)
         '''
         df_orderpos = pd.read_excel(fr"{self.input_path}\MESb.xlsx", sheet_name="tblOrderPos")
         df_orderpos=df_orderpos[df_orderpos.Start.isna()]
