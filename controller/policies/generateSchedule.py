@@ -15,8 +15,9 @@ from pymoo.termination.default import DefaultSingleObjectiveTermination
 class GenerateSchedule(ControlPolicy):
     inputParameters = ['orders']
     def fitness_function(self,sequence):
-        ctrlUpdate = {"executeSchedule":{"sequence":[sequence]}}
+        ctrlUpdate = {"executeSchedule":{"sequence":sequence+1}}
         req = SimulationRequest()
+        req['output'] = ['Cmax']
         res = self._controller.dt.interface(None,ctrlUpdate,req)
         return (res['Cmax'])
 
@@ -39,7 +40,7 @@ class GenerateSchedule(ControlPolicy):
             return fitness_values 
         
     def solve(self,**kwargs):
-        df_orderpos = kwargs['input']
+        df_orderpos = kwargs['input']['orders']
         problem = self.OrderOptimizationProblem(self,df_orderpos)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)

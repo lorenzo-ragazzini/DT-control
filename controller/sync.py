@@ -22,7 +22,7 @@ def planned_orders(simple=False):
             #  Crea un nuovo dataframe con le colonne filtrate
             df_salvataggio = pd.DataFrame(df_unione)
             # Salva il dataframe in un nuovo file Excel
-            nome_file_salvataggio = fr"{input_path}\WPNo_OpNo_ProcTime_{value}.xlsx"
+            nome_file_salvataggio = fr"{input_path}\Data\WPNo_OpNo_ProcTime_{value}.xlsx"
             df_salvataggio.to_excel(nome_file_salvataggio, index=False)
         print(f"WPNo_OpNo_ProcTime tables have been created")
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]

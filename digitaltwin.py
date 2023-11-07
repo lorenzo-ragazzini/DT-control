@@ -14,19 +14,25 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-            self.filename = "FinishTimes.xlsx"        
+            self.filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
     def start(self):
-        self.plantsim = Plantsim(version = '16.0', license_type='Student')
+        self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
         self.plantsim.set_path_context('.Models.Model')
         self.plantsim.set_event_controller()
+    def stop(self):
+        self.plantsim.reset_simulation()
+        self.plantsim.quit()
     def plantsim_run(self):
+        if not hasattr(self,'plantsim'):
+            self.start()
         for file in os.listdir(self.output_path):
             os.remove(self.output_path+'/'+file)
         self.plantsim.reset_simulation()
-        self.plantsim.start_simulation()       
-        while not os.path.exists(os.path.join(self.output_path, self.filename)):
-            time.sleep(0.1)
+        self.plantsim.start_simulation()
+        for filename in self.filenames:       
+            while not os.path.exists(os.path.join(self.output_path, filename)):
+                time.sleep(0.1)
         return
     def synchronize(self,taskResourceInformation:dict={}):
         if not taskResourceInformation:
@@ -38,7 +44,7 @@ class DigitalTwin():
     def update(self,controlUpdate:dict):
         try:
             sequence = controlUpdate['executeSchedule']['sequence']
-            pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=False)
+            pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=True)
         except:
             pass
         try:
@@ -47,8 +53,9 @@ class DigitalTwin():
         except:
             pass
     def simulate(self,request,write=False):
-        configuration=pd.DataFrame()
-        configuration['simLength'] = request['simLength']
+        # configuration=pd.DataFrame()
+        # configuration['simLength'] = request['simLength']
+        configuration=pd.DataFrame(request['input'],index=[0])
         configuration.to_excel(fr"{self.input_path}\Configuration.xlsx", index=False)
         results = dict()
         for ii in range(request['nrOfSimul']):
@@ -92,5 +99,5 @@ class DigitalTwin():
             total_energy_consumption = np.sum(df2.iloc[-1,1:].astype(float))
             data["total_energy_consumption"] = total_energy_consumption
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
-            data["Cmax"] = df.iloc[:, 1].max()
+            data["Cmax"] = df['ExitTime'].max()
         return data
