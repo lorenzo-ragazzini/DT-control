@@ -79,21 +79,11 @@ class DigitalTwin():
         df2 = pd.read_excel(fr"{self.output_path}\TotEnergyConsumption.xlsx")
         data = dict()
         if 'th' in request['output']:
-            # Seleziona la colonna dei tempi di uscita
-            tout = df.iloc[:, 1]
-            # Calcola le differenze tra i tempi di uscita
-            dt = tout.diff()
-            # Calcola la media dei tempi di attraversamento del sistema
-            average_throughput = 1/dt.mean()
-            data["average_TH"] = average_throughput
-        if 'ct' in request['output']:
+            data["average_TH"] = 1/df["ExitTime"].diff().mean()
+        if 'st' in request['output']:
             # Seleziona la quarta colonna (colonna dei cycle time)
-            cycle_time = df.iloc[:, 3]
-            # Filtra i valori negativi
-            cycle_time = cycle_time[cycle_time >= 0]
-            # Calcola la media dei valori del cycle time
-            average_cycle_time = cycle_time.mean()
-            data["average_CT"] = average_cycle_time
+            system_time = df["CycleTime"]
+            data["average_system_time"] = system_time[system_time >= 0].mean()
         if 'energy' in request['output']:
             # Calcola il consumo energetico totale
             total_energy_consumption = np.sum(df2.iloc[-1,1:].astype(float))
