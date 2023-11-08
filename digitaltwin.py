@@ -86,8 +86,7 @@ class DigitalTwin():
             data["average_system_time"] = system_time[system_time >= 0].mean()
         if 'energy' in request['output']:
             # Calcola il consumo energetico totale
-            total_energy_consumption = np.sum(df2.iloc[-1,1:].astype(float))
-            data["total_energy_consumption"] = total_energy_consumption
+            data["total_energy_consumption"] = np.sum(df2.iloc[-1,1:].astype(float))
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
             data["Cmax"] = df['ExitTime'].max()
         return data
