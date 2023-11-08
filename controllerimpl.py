@@ -3,7 +3,7 @@ from digitaltwin import DigitalTwin
 
 from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller import SmartController
-from controller.modules import SetObjective, SetWIP
+from controller.modules import SetObjective, SetWIP, UpdateWIP
 
 class Rule1(ControlRule):
     trigger = 'new'
@@ -13,12 +13,13 @@ class Rule1(ControlRule):
 class Rule2(ControlRule):
     trigger = 'completion'
     def run(self,event):
-        return []
+        return [UpdateWIP]
     
 class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
-        return [SetWIP,GenerateSchedule]
+        # return [SetWIP,GenerateSchedule]
+        return [GenerateSchedule]
 
 class Rule4(ControlRule):
     trigger = '?'
