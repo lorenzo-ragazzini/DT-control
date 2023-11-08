@@ -45,7 +45,8 @@ class GenerateSchedule(ControlPolicy):
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)
         res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"])
-
+        return {"sequence":res.X.tolist()}
+    
 if __name__ == '__main__':
     a=SimulationRequest()
     a[1] = 10
