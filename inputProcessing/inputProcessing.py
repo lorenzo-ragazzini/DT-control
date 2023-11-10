@@ -65,6 +65,10 @@ if __name__ == '__main__':
                 step = nextstep
             tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order) & (tblStep_dataframe['StepNo']!=step)].index,inplace=True)            
         else:
-            # tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order)].index,inplace=True)            
+            tblStep_dataframe.drop(index=tblStep_dataframe.loc[(tblStep_dataframe['ONo']==order)].index,inplace=True)            
             pass
-            
+    print(1)
+           
+
+tblStep_dataframe['Start'] = np.where(tblStep_dataframe['Start'].notna(), 1, 0)
+tblStep_dataframe = tblStep_dataframe[['WPNo','ONo','OpNo','Start']]

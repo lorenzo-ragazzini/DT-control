@@ -2,4 +2,5 @@
 from operationalController import ControlModule
 
 class SetObjective(ControlModule):
-    pass
+    def run(self):
+        pass
