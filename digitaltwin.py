@@ -14,7 +14,7 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-            self.filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
+            self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
     def start(self):
         self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
@@ -30,7 +30,7 @@ class DigitalTwin():
             os.remove(self.output_path+'/'+file)
         self.plantsim.reset_simulation()
         self.plantsim.start_simulation()
-        for filename in self.filenames:       
+        for filename in self.output_filenames:       
             while not os.path.exists(os.path.join(self.output_path, filename)):
                 time.sleep(0.1)
         return

@@ -40,7 +40,7 @@ class Messenger:
         queue_client.send_message(msg)
     def receive(self,queue_name,delete=True):
         queue_client = self.queue_service_client.get_queue_client(queue_name)
-        messages = queue_client.receive_messages()
+        messages = [m for m in queue_client.receive_messages()]
         for message in messages:
             queue_client.delete_message(message)
         return messages

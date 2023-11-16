@@ -5,7 +5,7 @@ from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller import SmartController
 from controller.modules import SetObjective, SetWIP, UpdateWIP
 
-from implementation.eventgenerator import EventListener
+from implementation.eventgenerator import EventListenerMsg
 
 class Rule1(ControlRule):
     trigger = 'new'
@@ -21,7 +21,7 @@ class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
         # return [SetWIP,GenerateSchedule]
-        return [GenerateSchedule]
+        return [GenerateSchedule]    
 
 class Rule4(ControlRule):
     trigger = '?'
@@ -40,10 +40,14 @@ def main():
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
 
-    e = EventListener('events',1)
+    e = EventListenerMsg('events',1)
     e.ctrl = ctrl
+    # while True:
+    #     e.listen()
+    #     import time
+    #     time.sleep(1)
     import asyncio
-    asyncio.run(e.receive())
+    asyncio.run(e.async_listen(),debug=True)
 
 
 if __name__ == '__main__':

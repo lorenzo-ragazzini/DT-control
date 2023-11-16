@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 from time import sleep
-import asyncio
+import asyncio 
 from .communication import MessengerOnly
 
 class EventCreator:
@@ -38,7 +38,13 @@ class EventCreatorMsg(EventCreator):
     def __init__(self,queue_name,input_filename='MESb.xlsx',output_file=None):
         self.msg = MessengerOnly(queue_name)
         super().__init__(input_filename,output_file)
-    async def msgRun(self,timeout):
+    def run(self,timeout):
+        events = self.events()
+        for event in events:
+            print(pd.Timestamp.now(),event)
+            self.log.append([pd.Timestamp.now(),event])
+            self.msg.send(event)
+    async def async_run(self,timeout):
         while True:
             events = self.events()
             for event in events:
@@ -67,13 +73,20 @@ class EventListenerMsg:
         self.log = list()
         self.timeout = timeout
         self.ctrl = None
-    async def listen(self):
+    def listen(self):
+        events = self.msg.receive()
+        for event in events:
+            if event not in self.log:
+                self.log.append(event)
+                self.ctrl.send(event.content)
+    async def async_listen(self):
         while True:
             events = self.msg.receive()
             for event in events:
                 if event not in self.log:
+                    print(event)
                     self.log.append(event)
-                    self.ctrl.send(event)
+                    self.ctrl.send(event.content)
             await asyncio.sleep(self.timeout)
         
 if __name__ == '__main__':
