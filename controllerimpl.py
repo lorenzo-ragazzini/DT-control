@@ -5,6 +5,8 @@ from controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from controller import SmartController
 from controller.modules import SetObjective, SetWIP, UpdateWIP
 
+from implementation.eventgenerator import EventListener
+
 class Rule1(ControlRule):
     trigger = 'new'
     def run(self,event):
@@ -26,10 +28,10 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-if __name__ == '__main__':
 
+def main():
     dt = DigitalTwin()
-    # dt.start()
+    #dt.start()
     ctrl = SmartController()
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
@@ -38,6 +40,11 @@ if __name__ == '__main__':
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
 
-    ctrl.send('start')
-    ctrl.send('new')
+    e = EventListener('events',1)
+    e.ctrl = ctrl
+    import asyncio
+    asyncio.run(e.receive())
 
+
+if __name__ == '__main__':
+    main()

@@ -32,7 +32,7 @@ class ShareFileOnly(ShareFile):
         super().download(self.cloud_file_path,self.filename,self.local_file_path)
 
 class Messenger:
-    def __init__(self):
+    def __init__(self,delete_received_messages=True):
         self.connection_string = 'DefaultEndpointsProtocol=https;AccountName=cloudformesdata;AccountKey=V3a7emh71+MSTdHykDKaZS9NPzwlp/orebGlYCNGNet5PgRgl7o94lafftuIO1JaOc+sNjFisdCt+AStR14uag==;EndpointSuffix=core.windows.net'
         self.queue_service_client = QueueServiceClient.from_connection_string(self.connection_string)      
     def send(self,queue_name,msg):

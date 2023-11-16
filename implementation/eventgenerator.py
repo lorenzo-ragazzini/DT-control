@@ -2,7 +2,7 @@ import json
 import pandas as pd
 from time import sleep
 import asyncio
-from dtInput import MessengerOnly
+from .communication import MessengerOnly
 
 class EventCreator:
     def __init__(self,input_filename='MESb.xlsx',output_file=None):
@@ -39,22 +39,42 @@ class EventCreatorMsg(EventCreator):
         self.msg = MessengerOnly(queue_name)
         super().__init__(input_filename,output_file)
     async def msgRun(self,timeout):
-        events = self.events()
-        for event in events:
-            print(pd.Timestamp.now(),event)
-            self.log.append([pd.Timestamp.now(),event])
-            self.msg.send(event)
+        while True:
+            events = self.events()
+            for event in events:
+                print(pd.Timestamp.now(),event)
+                self.log.append([pd.Timestamp.now(),event])
+                self.msg.send(event)
+            await asyncio.sleep(self.timeout)
 
 class EventListener:
-    def __init__(self,queue_name):
+    def __init__(self,queue_name,timeout=1):
+        self.log = list()
+        self.timeout = timeout
+        self.ctrl = None
+    def listen(self):
+        while True:
+            events = self.msg.receive()
+            for event in events:
+                if event not in self.log:
+                    self.log.append(event)
+                    self.ctrl.send(event)
+            sleep(self.timeout)
+
+class EventListenerMsg:
+    def __init__(self,queue_name,timeout=1):
         self.msg = MessengerOnly(queue_name)
         self.log = list()
+        self.timeout = timeout
         self.ctrl = None
-    async def do(self):
-        events = self.msg.receive()
-        for event in events:
-            self.ctrl.send(event)
-        await asyncio.sleep(1)
+    async def listen(self):
+        while True:
+            events = self.msg.receive()
+            for event in events:
+                if event not in self.log:
+                    self.log.append(event)
+                    self.ctrl.send(event)
+            await asyncio.sleep(self.timeout)
         
 if __name__ == '__main__':
     log = list()
