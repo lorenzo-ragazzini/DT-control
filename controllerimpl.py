@@ -40,3 +40,4 @@ if __name__ == '__main__':
 
     ctrl.send('start')
     ctrl.send('new')
+
