@@ -4,6 +4,7 @@ from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 from DTPPC.implementation.local.events import EventListenerMsg
+import asyncio
 
 class Rule1(ControlRule):
     trigger = 'new'
@@ -26,7 +27,6 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-
 def main():
     dt = DigitalTwin()
     #dt.start()
@@ -34,19 +34,11 @@ def main():
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
-
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
-
     e = EventListenerMsg('events',1)
     e.ctrl = ctrl
-    # while True:
-    #     e.listen()
-    #     import time
-    #     time.sleep(1)
-    import asyncio
     asyncio.run(e.async_listen(),debug=True)
-
 
 if __name__ == '__main__':
     main()
