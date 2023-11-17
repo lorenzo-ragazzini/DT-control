@@ -90,3 +90,22 @@ class DigitalTwin():
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
             data["Cmax"] = df['ExitTime'].max()
         return data
+
+class DigitalTwin(DigitalTwin):
+    def start(self):
+        #freeze
+        super().start()
+
+def _clean_win32com():
+    import win32com
+    from os import rename
+    path = win32com.__gen_path__
+    path = path.rsplit('\\',1)[0]
+    print(path)
+
+if __name__ == '__main__':
+    dt = DigitalTwin()
+    dt.start()
+    dt.stop()
+
+
