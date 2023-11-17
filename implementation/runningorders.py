@@ -17,16 +17,16 @@ async def msgsend():
 if __name__ == '__main__':
     u = ShareFileOnly('WorkInProcess.xlsx','','dt-input')
 
-def uploader1V1():
+def uploaderLocalV1():
+    'push'
     s1 = ShareFileOnly('WorkInProcess.xlsx','','dt-input')
-    asyncio.run(s1.upload(u),5)
+    asyncio.run(s1.upload(u),timeout=5)
     s2 = ShareFileOnly('Orders_Table.xlsx','','ctrl-input/planned-orders')
-    asyncio.run(s2.upload(u),5)
+    asyncio.run(s2.upload(u),timeout=5)
     m = MessengerOnly('events')
-    asyncio.run(upload(u),5)
+    asyncio.run(upload(u),timeout=1)
 
-
-def downloader1V1():
+def downloaderLocalV1():
     pass
 
 def uploader2V1():
