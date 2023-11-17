@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from operationalController import ControlPolicy
-from controller.misc import SimulationRequest
+from DTPPC.operationalController import ControlPolicy
+from DTPPC.controller.misc import SimulationRequest
 
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.problem import Problem

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from operationalController import ControlModule
+from DTPPC.operationalController import ControlModule
 
 class UpdateWIP(ControlModule):
     def run(self,**kwargs):

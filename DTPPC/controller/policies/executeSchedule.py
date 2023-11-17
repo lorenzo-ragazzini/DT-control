@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from operationalController import ControlPolicy
+from DTPPC.operationalController import ControlPolicy
 
 class ExecuteSchedule(ControlPolicy):
     # sequence

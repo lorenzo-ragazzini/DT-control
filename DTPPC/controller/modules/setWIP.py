@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from operationalController import ControlModule
-from controller.misc import SimulationRequest
+from DTPPC.operationalController import ControlModule
+from DTPPC.controller.misc import SimulationRequest
 import pandas as pd
 
 class SetWIP(ControlModule):
