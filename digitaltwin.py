@@ -92,9 +92,10 @@ class DigitalTwin():
         return data
 
 class DigitalTwin(DigitalTwin):
-    def start(self):
-        #freeze
-        super().start()
+    def freeze(self):
+        pass
+    def defrost(self):
+        pass
 
 def _clean_win32com():
     import win32com
