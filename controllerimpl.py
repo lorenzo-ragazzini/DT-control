@@ -1,10 +1,8 @@
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.digitaltwin import DigitalTwin
-
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
-
 from DTPPC.implementation.local.events import EventListenerMsg
 
 class Rule1(ControlRule):
