@@ -2,7 +2,7 @@ import json
 import pandas as pd
 from time import sleep
 import asyncio 
-from DTPPC.implementation.communication.communication import MessengerOnly
+from DTPPC.implementation.communication.message import MessengerOnly
 
 class EventCreator:
     def __init__(self,input_filename='MESb.xlsx',output_file=None):
