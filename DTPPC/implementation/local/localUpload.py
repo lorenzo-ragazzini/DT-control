@@ -21,7 +21,6 @@ async def upload_files(timeout):
 def main():
     timeout_files = 5
     timeout_events = 1
-    asyncio.run(c.run_async(timeout=5), debug=True)
     asyncio.run(upload_files(timeout_files), debug=True)
     e = EventCreatorMsg('events')
     asyncio.run(e.async_run(timeout_events), debug=True)
