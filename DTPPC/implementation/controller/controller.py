@@ -3,7 +3,7 @@ from DTPPC.digitaltwin import DigitalTwin
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
-from DTPPC.implementation.local.events import EventListenerMsg
+from DTPPC.implementation.controller.events import EventListenerMsg
 import asyncio
 
 class Rule1(ControlRule):
