@@ -18,7 +18,7 @@ async def upload_files(timeout):
     u2.upload()
     await asyncio.sleep(timeout=timeout)
 
-def main():
+def upload():
     timeout_files = 5
     timeout_events = 1
     asyncio.run(upload_files(timeout_files), debug=True)
@@ -26,4 +26,4 @@ def main():
     asyncio.run(e.async_run(timeout_events), debug=True)
 
 if __name__ == '__main__':
-    main()
+    upload()
