@@ -8,5 +8,5 @@ class SmartController(OperationalController):
         self.decisionVariables = {'sequence':list(range(1,1+n_orders))}
         self.decisionVariables['admission'] = [False for i in range(n_orders)]
         self.systemModel.update({'WIP':0})
-    async def send_async(self,event):
+    async def send(self,event):
         super().send(event)
