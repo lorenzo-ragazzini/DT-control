@@ -1,6 +1,6 @@
 from DTPPC.implementation.communication.communication import ShareFile, ShareFileOnly
-from .syncOrders import planned_orders
-from .inputProcessing import running_orders
+from .planned_orders import planned_orders
+from .running_orders import running_orders
 from .events import EventCreatorMsg
 from .dbConnect import Connection
 import asyncio
