@@ -1,6 +1,7 @@
 import pyodbc
 import pandas as pd
 from time import sleep
+import asyncio
 
 class Connection:
 	def __init__(self,tbls,path_to_file):
@@ -18,6 +19,14 @@ class Connection:
 				dfs = self.process()
 				self.save(dfs)
 				sleep(timeout)
+		except: #disconnect in case of error
+			self.disconnect()
+	async def run_async(self,timeout):
+		try:
+			while True:
+				dfs = self.process()
+				self.save(dfs)
+				asyncio.sleep(timeout)
 		except: #disconnect in case of error
 			self.disconnect()
 	def process(self):
@@ -39,14 +48,16 @@ class Connection:
 		with pd.ExcelWriter(self.path_to_file) as writer:
 			for tbl in ["tblStepDef","tblStep","tblOrderPos"]:
 				dfs[tbl].to_excel(writer, sheet_name=tbl, index=False)
-	
 
-c=Connection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
-c.connect()
-c.run(10)
-c.disconnect()
+if __name__ == '__main__':
+	c=Connection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
+	c.connect()
+	if True:
+		asyncio.run(c.run_async(timeout=5))
+	else
+		c.run(timeout=5)
 
-
+'''
 if __name__ == '__main__':	
 	#pyodbc.lowercase = False
 	conn = pyodbc.connect(r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:/MES4/FestoMES.accdb;")
@@ -79,3 +90,4 @@ if __name__ == '__main__':
 
 	cur.close()
 	conn.close()
+	'''
