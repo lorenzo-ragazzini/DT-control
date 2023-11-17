@@ -5,6 +5,9 @@ from .events import EventCreatorMsg
 import asyncio
 
 async def upload_files(timeout):
+    if 'c' not in locals().keys():
+        c=Connection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
+	c.save(c.process())
     running_orders()
     u1=ShareFileOnly('','WorkInProcess.xlsx','dt-input/')
     u1.upload()
@@ -16,7 +19,6 @@ async def upload_files(timeout):
 def main():
     timeout_files = 5
     timeout_events = 1
-    c=Connection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
 	c.connect()
 	asyncio.run(c.run_async(timeout=5))
     asyncio.run(upload_files(timeout_upload))
