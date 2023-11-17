@@ -54,7 +54,7 @@ if __name__ == '__main__':
 	c.connect()
 	if True:
 		asyncio.run(c.run_async(timeout=5))
-	else
+	else:
 		c.run(timeout=5)
 
 '''
