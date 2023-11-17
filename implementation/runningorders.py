@@ -18,7 +18,7 @@ if __name__ == '__main__':
     u = ShareFileOnly('WorkInProcess.xlsx','','dt-input')
 
 def uploaderLocalV1():
-    'push'
+    '''This function is installed on MES PC to push files to Azure'''
     s1 = ShareFileOnly('WorkInProcess.xlsx','','dt-input')
     asyncio.run(s1.upload(u),timeout=5)
     s2 = ShareFileOnly('Order_Table.xlsx','','ctrl-input/planned-orders')
