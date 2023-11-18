@@ -5,12 +5,13 @@ from collections import ChainMap
 from .controlMap import ControlMap
 from .controlPolicy import ControlPolicy
 from .controlModule import ControlModule
+from .decisionVariables import DecisionVariables
 
 class OperationalController:
     map:ControlMap
     policies:Iterable[ControlPolicy] = list()
     modules:Iterable[ControlModule] = list()
-    decisionVariables = DecisionVariables()
+    decisionVariables:DecisionVariables = DecisionVariables()
     systemModel = {}
     def addPolicy(self,Cp:Type[ControlPolicy]):
         self.policies.append(Cp(self))
@@ -52,17 +53,3 @@ class OperationalController:
     def __getitem__(self,item):
         if type(item) is type:
             return self.__getattr__(item.__name__)
-
-class DecisionVariables(dict):
-    def __init__(self, *args, **kwargs):
-        self._callback = None
-        super().__init__(*args, **kwargs)
-    def set_callback(self, callback):
-        self._callback = callback
-    def __setitem__(self, key, value):
-        if not isinstance(key, str):
-            raise TypeError("Key must be a string.")
-        if self.get(key) != value:
-            super().__setitem__(key, value)
-            if self._callback:
-                self._callback(key, value)
