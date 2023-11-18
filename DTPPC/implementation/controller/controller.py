@@ -4,7 +4,7 @@ from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 from DTPPC.implementation.controller.events import EventListenerMsg
-from DTPPC.implementation.controller.uploader import SendDV
+from DTPPC.implementation.controller.uploader import SendDVmsg
 import asyncio
 
 class SmartController(SmartController):
@@ -42,9 +42,9 @@ def main():
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
     ctrl.decisionVariables._callback = None
     e = EventListenerMsg('events',1)
-    d = SendDV('dv')
+    d = SendDVmsg('dv')
     e.ctrl = ctrl
-    ctrl.decisionVariables._callback = d.run
+    ctrl.decisionVariables._callback = d.run_msg
     asyncio.run(e.async_listen(),debug=True)
 
 if __name__ == '__main__':

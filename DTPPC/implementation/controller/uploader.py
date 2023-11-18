@@ -8,11 +8,19 @@ filename = 'dv.json'
 class SendDV():
     def __init__(self,queue_name,input_filename='dv.json'):
         self.input_filename = input_filename
-        self.msg = MessengerOnly(queue_name)
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.run()
-    def run(self,dv=None):
-        if not dv:
+        self.actuator = None
+    def run(self,dvs=None):
+        if not dvs:
             with open(self.input_filename) as f:
-                dv = json.load(f)
-        return self.msg.send(dv)
+                dvs = json.load(f)
+        return self.actuator.run(dvs)
+
+class SendDVmsg():
+    def __init__(self,queue_name,input_filename='dv.json'):
+        self.input_filename = input_filename
+        self.msg = MessengerOnly(queue_name)
+    def run(self,dvs=None):
+        if not dvs:
+            with open(self.input_filename) as f:
+                dvs = json.load(f)
+        return self.msg.send(dvs)
