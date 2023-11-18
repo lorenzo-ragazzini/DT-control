@@ -10,5 +10,3 @@ class SmartController(OperationalController):
     @property
     def n_orders(self):
         return len(self.systemModel['orders'])
-    async def send(self,event):
-        super().send(event)

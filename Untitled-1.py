@@ -1,2 +1,2 @@
-import DTPPC.implementation.local.localUpload 
-print(1)
+from DTPPC.implementation.controller.controller import main
+main()
