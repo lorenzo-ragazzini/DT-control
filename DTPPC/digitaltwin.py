@@ -4,6 +4,9 @@ import time
 import json
 import numpy as np
 import pandas as pd
+import random
+from string import ascii_letters as letters
+import shutil
 from plantsim.plantsim import Plantsim
 from plantsim.table import Table
 
@@ -14,7 +17,7 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-            self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
+        self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
     def start(self):
         self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
@@ -36,7 +39,7 @@ class DigitalTwin():
         return
     def synchronize(self,taskResourceInformation:dict={}):
         if not taskResourceInformation:
-            from controller.sync import planned_orders
+            from DTPPC.implementation.local.planned_orders import planned_orders
             df = planned_orders()
         else:
             df = pd.DataFrame(taskResourceInformation)
@@ -90,12 +93,41 @@ class DigitalTwin():
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
             data["Cmax"] = df['ExitTime'].max()
         return data
-
+    
 class DigitalTwin(DigitalTwin):
-    def freeze(self):
+    def __init__(self):
+        self.instances : dict = dict()
+        self.instances['base'] = self
+        super().__init__()
+    def __getitem__(self,key):
+        return self.instances[key]
+    def new(self):
+        path, name = create_temp()
+        self[name] = DigitalTwin()
+        self[name].model_path = path + self.model_path.rsplit('/',1)[-1]
+        self[name].output_path = path + 'DB'
+        self[name].input_path = path + 'Output'
+    def clear(self,name:str=''):
+        if not name:
+            for name in self.instances.keys():
+                self._clear_instance(name)
+        elif name in self.instances.keys():
+            self._clear_instance(name)
+    def _clear_instance(self,name:str):
+        self.instances.pop(name)
+        shutil.rmtree(folder_path)
+    def sync(self):
         pass
-    def defrost(self):
-        pass
+            
+
+def create_temp(source_folder):
+    while True:
+        string = ''.join(random.choice(letters) for _ in range(16))
+        destination_folder = os.path.dirname(source_folder)+'/temp/'+ string + '/'
+        if not os.path.exists(destination_folder) and not os.path.isdir(destination_folder):
+            break
+    shutil.copytree(source_folder, destination_folder)
+    return destination_folder, string
 
 def _clean_win32com():
     import win32com
