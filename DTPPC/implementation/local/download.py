@@ -8,7 +8,7 @@ class DownloadDV:
     def __init__(self,queue_name) -> None:
         self.msg = MessengerOnly(queue_name)
         self.log = list()
-        self.actuator = None
+        self.actuator : Actuator = None
     def listen(self):
         list_dvs = self.msg.receive()
         for dvs in list_dvs:
