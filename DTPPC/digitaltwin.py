@@ -107,6 +107,7 @@ class DigitalTwin(DigitalTwin):
         self[name].model_path = path + self.model_path.rsplit('/',1)[-1]
         self[name].output_path = path + 'DB'
         self[name].input_path = path + 'Output'
+        return name
     def clear(self,name:str=''):
         if not name:
             for name in self.instances.keys():
@@ -114,8 +115,8 @@ class DigitalTwin(DigitalTwin):
         elif name in self.instances.keys():
             self._clear_instance(name)
     def _clear_instance(self,name:str):
-        self.instances.pop(name)
-        shutil.rmtree(folder_path)
+        dt = self.instances.pop(name)
+        shutil.rmtree(dt.model_path.rsplit('/',1)[0])
     def sync(self):
         pass
             
