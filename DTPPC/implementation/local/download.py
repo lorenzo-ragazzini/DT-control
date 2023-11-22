@@ -1,6 +1,7 @@
 import asyncio
 import json
 from DTPPC.implementation.communication.message import MessengerOnly
+from DTPPC.implementation.local.actuator import Actuator
 
 
 class DownloadDV:
