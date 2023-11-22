@@ -101,13 +101,16 @@ class DigitalTwin(DigitalTwin):
         super().__init__()
     def __getitem__(self,key):
         return self.instances[key]
-    def new(self):
-        path, name = create_temp()
-        self[name] = DigitalTwin()
-        self[name].model_path = path + self.model_path.rsplit('/',1)[-1]
-        self[name].output_path = path + 'DB'
-        self[name].input_path = path + 'Output'
-        return name
+    def __setitem__(self,key,value):
+            self.instances[key] = value
+    def new(self) -> str:
+        model_path, model_name = self.model_path.rsplit('/',1)
+        new_path, code_name = create_temp(model_path)
+        self[code_name] = DigitalTwin()
+        self[code_name].model_path = new_path + model_name
+        self[code_name].output_path = new_path + 'DB'
+        self[code_name].input_path = new_path + 'Output'
+        return code_name
     def clear(self,name:str=''):
         if not name:
             for name in self.instances.keys():
