@@ -1,0 +1,32 @@
+from flask import Flask, request
+from DTPPC.digitaltwin import DigitalTwin
+from typing import Any
+from waitress import serve
+import requests
+app = Flask(__name__)
+app.debug = True
+app.dt : DigitalTwin = None
+app.results : dict[str,Any] = dict()
+
+@app.route('/new',methods=['GET'])
+def your_function():
+    return app.dt.new()
+    
+@app.route('/clear',methods=['POST'])
+def your_function():
+    data = request.json  
+    return app.dt.clear(data)
+    
+@app.route('/run',methods=['GET','POST'])
+def your_function():
+    name,inputs=1,1
+    if request.method == 'POST':
+        app.results[name] = app.dt.interface(inputs)
+    if request.method == 'GET':
+        return app.results.pop(name)
+    
+
+def run_server():
+    app.run()
+    serve(app, host='127.0.0.1', port=5000)
+
