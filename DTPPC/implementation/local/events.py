@@ -2,7 +2,6 @@ import json
 import pandas as pd
 from time import sleep
 import asyncio 
-from DTPPC.implementation.communication.message import MessengerOnly
 
 class EventCreator:
     def __init__(self,input_filename='MESb.xlsx',output_file=None):
@@ -33,25 +32,6 @@ class EventCreator:
             with open(self.input_path+'/'+self.output_filename,'w') as f:
                 json.dump(self.log,f)
         sleep(timeout)
-
-class EventCreatorMsg(EventCreator):
-    def __init__(self,queue_name,input_filename='MESb.xlsx',output_file=None):
-        self.msg = MessengerOnly(queue_name)
-        super().__init__(input_filename,output_file)
-    def run(self,timeout):
-        events = self.events()
-        for event in events:
-            print(pd.Timestamp.now(),event)
-            self.log.append([pd.Timestamp.now(),event])
-            self.msg.send(event)
-    async def async_run(self,timeout):
-        while True:
-            events = self.events()
-            for event in events:
-                print(pd.Timestamp.now(),event)
-                self.log.append([pd.Timestamp.now(),event])
-                self.msg.send(event)
-            await asyncio.sleep(self.timeout)
         
 if __name__ == '__main__':
     log = list()

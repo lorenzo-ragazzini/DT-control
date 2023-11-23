@@ -1,6 +1,6 @@
 import asyncio
 import json
-from DTPPC.implementation.communication.message import MessengerOnly
+from DTPPC.implementation.azure.communication.message import MessengerOnly
 from DTPPC.implementation.local.actuator import Actuator
 
 

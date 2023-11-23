@@ -1,5 +1,5 @@
 from typing import Any
-from DTPPC.implementation.communication.message import MessengerOnly
+from DTPPC.implementation.azure.communication.message import MessengerOnly
 import json
 
 local_path = ''

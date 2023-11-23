@@ -1,3 +1,4 @@
+'''Flask backend for DT calls'''
 from flask import Flask, request
 from DTPPC.digitaltwin import DigitalTwin
 from typing import Any
@@ -23,8 +24,7 @@ def your_function():
     if request.method == 'POST':
         app.results[name] = app.dt.interface(inputs)
     if request.method == 'GET':
-        return app.results.pop(name)
-    
+        return app.results.pop(name)  
 
 def run_server():
     app.run()

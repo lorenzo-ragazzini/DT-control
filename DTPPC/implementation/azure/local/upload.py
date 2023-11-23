@@ -1,4 +1,4 @@
-from DTPPC.implementation.communication.sharefile import ShareFile, ShareFileOnly
+from DTPPC.implementation.azure.communication.sharefile import ShareFile, ShareFileOnly
 from .planned_orders import planned_orders
 from .running_orders import running_orders
 from .events import EventCreatorMsg
