@@ -10,21 +10,29 @@ app.dt : DigitalTwin = None
 app.results : dict[str,Any] = dict()
 
 @app.route('/new',methods=['GET'])
-def your_function():
+def new():
     return app.dt.new()
     
 @app.route('/clear',methods=['POST'])
-def your_function():
+def clear():
     data = request.json  
     return app.dt.clear(data)
     
 @app.route('/run',methods=['GET','POST'])
-def your_function():
+def run():
     name,inputs=1,1
     if request.method == 'POST':
         app.results[name] = app.dt.interface(inputs)
     if request.method == 'GET':
-        return app.results.pop(name)  
+        return app.results.pop(name)
+
+@app.route('/clear',methods=['POST'])
+def synchronize():
+    pass
+
+@app.route('/clear',methods=['POST'])
+def update():
+    pass
 
 def run_server():
     app.run()
