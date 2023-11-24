@@ -4,6 +4,8 @@ from DTPPC.digitaltwin import DigitalTwin
 from typing import Any
 from waitress import serve
 import requests
+import json
+
 app = Flask(__name__)
 app.debug = True
 app.dt : DigitalTwin = None
@@ -20,9 +22,10 @@ def clear():
     
 @app.route('/run',methods=['GET','POST'])
 def run():
-    name,inputs=1,1
+    input = json.loads(request.data.decode())
+    name = input.pop('name')
     if request.method == 'POST':
-        app.results[name] = app.dt.interface(inputs)
+        app.results[name] = app.dt.interface(**input)
     if request.method == 'GET':
         return app.results.pop(name)
 

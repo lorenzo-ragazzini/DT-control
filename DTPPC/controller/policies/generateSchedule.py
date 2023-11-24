@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import json
 
 from DTPPC.operationalController import ControlPolicy
 from DTPPC.controller.misc import SimulationRequest
@@ -15,15 +16,16 @@ from pymoo.termination.default import DefaultSingleObjectiveTermination
 class GenerateSchedule(ControlPolicy):
     inputParameters = ['orders']
     def fitness_function(self,sequence):
-        ctrlUpdate = {"executeSchedule":{"sequence":sequence+1}}
+        name = None
+        ctrlUpdate = {"executeSchedule":{"sequence":(sequence+1).tolist()}}
         req = SimulationRequest()
         req['output'] = ['Cmax']
-        res = self._controller.dt.interface(None,ctrlUpdate,req)
+        res = self._controller.dt.interface(name,None,ctrlUpdate,req)
         return (res['Cmax'])
 
     class OrderOptimizationProblem(Problem):
-        def __init__(self,instance,df):
-            self.instance = instance
+        def __init__(self,controlPolicy,df):
+            self.controlPolicy = controlPolicy
             self.df = df
             super().__init__(n_var = len(df), n_obj=1, xl=0, xu=1)
         def _evaluate(self, x, out, *args, **kwargs):
@@ -31,8 +33,7 @@ class GenerateSchedule(ControlPolicy):
             fitness_values = np.zeros((n_individuals, 1))
             for i in range(n_individuals):
                 sequence = x[i].astype(int)
-                throughput = self.instance.fitness_function(sequence)
-
+                throughput = self.controlPolicy.fitness_function(sequence)
                 # ordered_df = self.df.iloc[order]
                 # throughput = self.instance.fitness_function(ordered_df)
                 fitness_values[i, 0] = (-1.0) * throughput
