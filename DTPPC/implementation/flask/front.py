@@ -11,5 +11,7 @@ class DTInterface:
     def interface(self,name,taskResourceInformation,controlUpdate,request):
         headers = {'Content-Type': 'application/json'}
         inputs = json.dumps({"name":name, "taskResourceInformation":taskResourceInformation, "controlUpdate":controlUpdate, "request":request})
-        requests.post(self.url+'/run', json=inputs, headers=headers)
-        return requests.get(self.url+'/run',name)
+        res = requests.post(self.url+'/run', json=inputs, headers=headers)
+        # res = requests.get(self.url+'/run',json=inputs,headers=headers) # inutile, ottieni lo stesso risultato
+        return json.loads(res.content.decode())
+        

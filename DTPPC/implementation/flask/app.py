@@ -22,10 +22,11 @@ def clear():
     
 @app.route('/run',methods=['GET','POST'])
 def run():
-    input = json.loads(request.data.decode())
+    input = json.loads(request.json)
     name = input.pop('name')
     if request.method == 'POST':
         app.results[name] = app.dt.interface(**input)
+        return app.results[name]
     if request.method == 'GET':
         return app.results.pop(name)
 
