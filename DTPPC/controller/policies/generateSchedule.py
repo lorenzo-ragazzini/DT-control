@@ -26,7 +26,7 @@ class GenerateSchedule(ControlPolicy):
         def __init__(self,controlPolicy,taskResourceInformation):
             self.controlPolicy = controlPolicy
             self.taskResourceInformation = taskResourceInformation
-            super().__init__(n_var = len(df), n_obj=1, xl=0, xu=1)
+            super().__init__(n_var = len(taskResourceInformation), n_obj=1, xl=0, xu=1)
         def _evaluate(self, x, out, *args, **kwargs):
             n_individuals = x.shape[0]
             fitness_values = np.zeros((n_individuals, 1))
