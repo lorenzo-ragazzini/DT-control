@@ -3,8 +3,8 @@ import json
 class DTInterface:
     def __init__(self,url):
         self.url = "http://" + url
-    def new(self):
-        return requests.get(self.url+'/new')
+    def new(self) -> str:
+        return requests.get(self.url+'/new').content.decode()
     def clear(self,name:str=None):
         data = {'name': name}
         requests.post(self.url+'/clear',json=data)
