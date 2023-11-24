@@ -15,25 +15,24 @@ from pymoo.termination.default import DefaultSingleObjectiveTermination
 
 class GenerateSchedule(ControlPolicy):
     inputParameters = ['orders']
-    def fitness_function(self,sequence):
-        name = None
+    def fitness_function(self,sequence,taskResourceInformation,name):
         ctrlUpdate = {"executeSchedule":{"sequence":(sequence+1).tolist()}}
         req = SimulationRequest()
         req['output'] = ['Cmax']
-        res = self._controller.dt.interface(name,None,ctrlUpdate,req)
+        res = self._controller.dt.interface(name,taskResourceInformation,ctrlUpdate,req)
         return (res['Cmax'])
 
     class OrderOptimizationProblem(Problem):
-        def __init__(self,controlPolicy,df):
+        def __init__(self,controlPolicy,taskResourceInformation):
             self.controlPolicy = controlPolicy
-            self.df = df
+            self.taskResourceInformation = taskResourceInformation
             super().__init__(n_var = len(df), n_obj=1, xl=0, xu=1)
         def _evaluate(self, x, out, *args, **kwargs):
             n_individuals = x.shape[0]
             fitness_values = np.zeros((n_individuals, 1))
             for i in range(n_individuals):
                 sequence = x[i].astype(int)
-                throughput = self.controlPolicy.fitness_function(sequence)
+                throughput = self.controlPolicy.fitness_function(sequence,self.df)
                 # ordered_df = self.df.iloc[order]
                 # throughput = self.instance.fitness_function(ordered_df)
                 fitness_values[i, 0] = (-1.0) * throughput
@@ -41,8 +40,8 @@ class GenerateSchedule(ControlPolicy):
             return fitness_values 
         
     def solve(self,**kwargs):
-        df_orderpos = kwargs['input']['orders']
-        problem = self.OrderOptimizationProblem(self,df_orderpos)
+        taskResourceInformation = kwargs['input']['orders']
+        problem = self.OrderOptimizationProblem(self,taskResourceInformation)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)
         res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"])
