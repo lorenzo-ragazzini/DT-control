@@ -15,8 +15,8 @@ def new():
     
 @app.route('/clear',methods=['POST'])
 def clear():
-    data = request.json  
-    return app.dt.clear(data)
+    name = request.json['name']
+    return app.dt.clear(name)
     
 @app.route('/run',methods=['GET','POST'])
 def run():
@@ -26,11 +26,11 @@ def run():
     if request.method == 'GET':
         return app.results.pop(name)
 
-@app.route('/clear',methods=['POST'])
+@app.route('/synchronize',methods=['POST'])
 def synchronize():
     pass
 
-@app.route('/clear',methods=['POST'])
+@app.route('/update',methods=['POST'])
 def update():
     pass
 

@@ -111,7 +111,7 @@ class DigitalTwin(DigitalTwin):
         self[code_name].output_path = new_path + 'DB'
         self[code_name].input_path = new_path + 'Output'
         return code_name
-    def clear(self,name:str=''):
+    def clear(self,name:str=None):
         if not name:
             for name in self.instances.keys():
                 self._clear_instance(name)
@@ -119,10 +119,14 @@ class DigitalTwin(DigitalTwin):
             self._clear_instance(name)
     def _clear_instance(self,name:str):
         dt = self.instances.pop(name)
-        shutil.rmtree(dt.model_path.rsplit('/',1)[0])
+        if dt.model_path != self.model_path: 
+            #it is not base instance, delete files
+            shutil.rmtree(dt.model_path.rsplit('/',1)[0])
+        else: 
+            # put it back
+            self.instances[name] = dt
     def sync(self):
         pass
-            
 
 def create_temp(source_folder):
     while True:
