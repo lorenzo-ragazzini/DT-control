@@ -3,7 +3,6 @@ from DTPPC.digitaltwin import DigitalTwin
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
-from DTPPC.implementation.controller.events import EventListenerMsg
 from DTPPC.implementation.local.planned_orders import planned_orders
 import asyncio
 
@@ -37,10 +36,6 @@ def main():
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
-    ctrl.systemModel['orders'] = planned_orders()
-    e = EventListenerMsg('events',1)
-    e.ctrl = ctrl
-    asyncio.run(e.async_listen(),debug=True)
 
 if __name__ == '__main__':
     main()
