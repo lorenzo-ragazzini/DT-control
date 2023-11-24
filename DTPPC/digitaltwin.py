@@ -125,8 +125,6 @@ class DigitalTwin(DigitalTwin):
         else: 
             # put it back
             self.instances[name] = dt
-    def sync(self):
-        pass
 
 def create_temp(source_folder):
     while True:
