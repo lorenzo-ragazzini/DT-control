@@ -11,5 +11,5 @@ if __name__ == "__main__":
     app.dt = DigitalTwin()
     with open('config.json') as f:
         input_path = json.load(f)['input_path']
-    download('Running_Orders.xlsx',input_path,'dt-input/')
+    download('Running_Orders.xlsx',input_path,'dt-input/',5)
     serve(app, host='127.0.0.1', port=5000)
