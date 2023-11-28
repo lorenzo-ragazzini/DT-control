@@ -11,10 +11,10 @@ async def uploader(s:ShareFileOnly, timeout):
         s.upload()
         await asyncio.sleep(timeout)
 
-def download(filename,local_file_path,cloud_file_path):
+def download(filename,local_file_path,cloud_file_path,timeout):
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
-    asyncio.run(downloader(s,5))
+    asyncio.run(downloader(s,timeout))
 
-def upload(filename,local_file_path,cloud_file_path):
+def upload(filename,local_file_path,cloud_file_path,timeout):
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
-    asyncio.run(uploader(s,5))
+    asyncio.run(uploader(s,timeout))

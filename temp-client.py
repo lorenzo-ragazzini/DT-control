@@ -32,14 +32,9 @@ if __name__ == '__main__':
 
     asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
     asyncio.run(create_files(timeout=5,ctrl=ctrl)) # create input files
-    upload(running_orders_file,file_path,cloud_file_path) # upload files to Azure cloud
+    upload(running_orders_file,file_path,cloud_file_path,timeout=5) # upload files to Azure cloud
     asyncio.run(ec.run_async(5)) # read events
     asyncio.run(t.run_async(5)) # trigger events
-    
-
-
-
-
 
 '''
 dt = DTInterface("127.0.0.1:5000")
