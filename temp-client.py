@@ -1,5 +1,7 @@
 import requests
 import asyncio
+from DTPPC.implementation.cloud.cloud import upload
+from DTPPC.implementation.controller.trigger import Trigger
 from DTPPC.implementation.flask.front import DTInterface
 from DTPPC.implementation.controller.controller import SmartController, ExecuteSchedule, Release, GenerateSchedule, SetWIP, ControlMap, Rule1, Rule2, Rule3, Rule4
 from DTPPC.implementation.local.create_files import create_files
@@ -22,10 +24,13 @@ ctrl.send('start')
 
 
 filename = 'MESdata.xlsx'
+file_path = ''
 
 dt = DTInterface("127.0.0.1:5000")
-dbc = DBConnection(filename)
-ec = EventCreator(filename)
+dbc = DBConnection(file_path,filename)
+ec = EventCreator(file_path,filename,output_filename='log.json')
+t = Trigger(file_path,filename)
+
 ctrl = SmartController()
 ctrl.dt = dt
 ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
@@ -33,8 +38,14 @@ ctrl.linkPolicies()
 ctrl.map = ControlMap()
 ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
 
-asyncio.run(dbc.run_async(timeout=5))
-asyncio.run(create_files(timeout=5,ctrl=ctrl))
+t.controller = ctrl
+
+asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
+asyncio.run(create_files(timeout=5,ctrl=ctrl)) # create input files
+upload() # upload files to Azure cloud
+asyncio.run(ec.run_async(5)) # read events
+asyncio.run(t.run_async(5)) # trigger events
+
 
 
 

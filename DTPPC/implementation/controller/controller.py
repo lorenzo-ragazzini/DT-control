@@ -6,9 +6,8 @@ from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 import asyncio
 
 class SmartController(SmartController):
-    pass
-    # async def send(self,event):
-    #     super().send(event)
+    async def send_async(self,event):
+        super().send(event)
 
 class Rule1(ControlRule):
     trigger = 'new'

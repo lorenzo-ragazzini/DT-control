@@ -16,11 +16,11 @@ def download():
     local_file_path = ''
     cloud_file_path = ''
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
-    downloader(s,5)
+    asyncio.run(downloader(s,5))
 
 def upload():
     filename = ''
     local_file_path = ''
     cloud_file_path = ''
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
-    uploader(s,5)
+    asyncio.run(uploader(s,5))
