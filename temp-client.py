@@ -9,8 +9,37 @@ from DTPPC.implementation.local.dbConnect import DBConnection
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders
 
-dt = DTInterface("127.0.0.1:5000")
+if __name__ == '__main__':
 
+    filename = 'MESdata.xlsx'
+    file_path = ''
+
+    dt = DTInterface("127.0.0.1:5000")
+    dbc = DBConnection(file_path,filename)
+    ec = EventCreator(file_path,filename,output_filename='log.json')
+    t = Trigger(file_path,filename)
+
+    ctrl = SmartController()
+    ctrl.dt = dt
+    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
+    ctrl.linkPolicies()
+    ctrl.map = ControlMap()
+    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+
+    t.controller = ctrl
+
+    asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
+    asyncio.run(create_files(timeout=5,ctrl=ctrl)) # create input files
+    upload() # upload files to Azure cloud
+    asyncio.run(ec.run_async(5)) # read events
+    asyncio.run(t.run_async(5)) # trigger events
+    
+
+
+
+
+'''
+dt = DTInterface("127.0.0.1:5000")
 
 ctrl = SmartController()
 ctrl.dt = dt
@@ -20,33 +49,4 @@ ctrl.map = ControlMap()
 ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
 ctrl.systemModel['orders'] = planned_orders()
 ctrl.send('start')
-
-
-
-filename = 'MESdata.xlsx'
-file_path = ''
-
-dt = DTInterface("127.0.0.1:5000")
-dbc = DBConnection(file_path,filename)
-ec = EventCreator(file_path,filename,output_filename='log.json')
-t = Trigger(file_path,filename)
-
-ctrl = SmartController()
-ctrl.dt = dt
-ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
-ctrl.linkPolicies()
-ctrl.map = ControlMap()
-ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
-
-t.controller = ctrl
-
-asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
-asyncio.run(create_files(timeout=5,ctrl=ctrl)) # create input files
-upload() # upload files to Azure cloud
-asyncio.run(ec.run_async(5)) # read events
-asyncio.run(t.run_async(5)) # trigger events
-
-
-
-
-
+'''
