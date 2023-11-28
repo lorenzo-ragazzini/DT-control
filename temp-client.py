@@ -14,7 +14,7 @@ if __name__ == '__main__':
     db_file = 'MESdata.xlsx'
     running_orders_file = ''
     planned_orders_file = ''
-    cloud_file_path = ''
+    cloud_file_path = 'dt-input/'
 
     dt = DTInterface("127.0.0.1:5000")
     dbc = DBConnection(output_file=db_file)

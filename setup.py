@@ -11,7 +11,7 @@ setuptools.setup(
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/lorenzo-ragazzini/dt-control",
+    url="https://github.com/lorenzo-ragazzini/dt-control@flask",
     packages=setuptools.find_namespace_packages()+setuptools.find_packages(),
     package_data={},
     classifiers=[
