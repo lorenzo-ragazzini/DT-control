@@ -4,7 +4,7 @@ from time import sleep
 import asyncio
 
 class DBConnection:
-	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos"]):
+	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos","tblOrder"]):
 		self.tbls = tbls
 		self.path_to_file = output_file
 		self.conn = None
@@ -51,7 +51,7 @@ class DBConnection:
 		return dfs
 	def save(self,dfs):
 		with pd.ExcelWriter(self.path_to_file) as writer:
-			for tbl in ["tblStepDef","tblStep","tblOrderPos"]:
+			for tbl in self.tbls:
 				dfs[tbl].to_excel(writer, sheet_name=tbl, index=False)
 
 if __name__ == '__main__':

@@ -7,6 +7,8 @@ def planned_orders(simple=False):
         paths = json.load(f)
         input_path = paths['input_path']
     df_orderpos = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblOrderPos")
+    df_orders = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblOrder")
+    df_orderpos['Enabled'] = df_orders.loc[df_orders.ONo == df_orderpos.ONo,"Enabled"]
     if not simple:
         df_origine = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblStepDef")
         df_proctime = pd.read_excel(fr"{input_path}\PROCTIME.xlsx")
@@ -25,31 +27,31 @@ def planned_orders(simple=False):
             nome_file_salvataggio = fr"{input_path}\Data\WPNo_OpNo_ProcTime_{value}.xlsx"
             df_salvataggio.to_excel(nome_file_salvataggio, index=False)
         print(f"WPNo_OpNo_ProcTime tables have been created")
-    df_orderpos=df_orderpos[df_orderpos.Start.isna()]
-    df_orders = pd.DataFrame()
-    df_orders['Number']=1
-    df_orders['WPNo'] = df_orderpos['WPNo']
-    df_orders['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-    '''
-    # Estrazione della colonna WPNo
-    df_orders = df_orderpos["WPNo"]
-    # Crea una nuova colonna con valori costanti di 1
-    new_column = pd.Series(1, index=df_orders.index, name="Number")
-    # Aggiungi la nuova colonna al DataFrame
-    df_orders = pd.concat([new_column, df_orders], axis=1)
-    '''
+    df=df_orderpos[df_orderpos.Start.isna()]
+    df = pd.DataFrame()
+    # df['Number']=1
+    df['WPNo'] = df_orderpos['WPNo']
+    df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
+    df['Enabled'] = df_orderpos['Enabled']
+
     # Esportare la tabella in un file Excel
-    df_orders.to_excel(fr"{input_path}\Order_Table.xlsx", index=False)
+    df.to_excel(fr"{input_path}\Order_Table.xlsx", index=False)
     print(f"Order_Table has been created")
-    return df_orders
+    return df
 
 def planned_orders_simplified(input_file:str,output_file:str=''):
     df_orderpos = pd.read_excel(input_file, sheet_name="tblOrderPos")
+    df_orders = pd.read_excel(input_file, sheet_name="tblOrder")
+    df_orderpos['Enabled'] = df_orders.loc[df_orders.ONo == df_orderpos.ONo,"Enabled"]
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
-    df['Number']=1
+    # df['Number']=1
     df['WPNo'] = df_orderpos['WPNo']
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
+    df['Enabled'] = df_orderpos['Enabled']
     if output_file != '':
         df.to_excel(output_file, index=False)
     return df
+
+if __name__ == '__main__':
+    planned_orders()
