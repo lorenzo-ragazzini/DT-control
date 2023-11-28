@@ -1,5 +1,4 @@
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
-from DTPPC.digitaltwin import DigitalTwin
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
@@ -46,6 +45,7 @@ def main() -> SmartController:
 
 
 if __name__ == '__main__':
+    from DTPPC.digitaltwin import DigitalTwin
     dt = DigitalTwin()
     ctrl = SmartController()
     ctrl.dt = dt
