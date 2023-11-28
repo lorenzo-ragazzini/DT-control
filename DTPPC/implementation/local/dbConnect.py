@@ -3,8 +3,8 @@ import pandas as pd
 from time import sleep
 import asyncio
 
-class Connection:
-	def __init__(self,tbls,path_to_file):
+class DBConnection:
+	def __init__(self,path_to_file,tbls=["tblStepDef","tblStep","tblOrderPos"]):
 		self.tbls = tbls
 		self.path_to_file = path_to_file
 	def connect(self):
@@ -31,7 +31,7 @@ class Connection:
 			self.disconnect()
 	def process(self):
 		dfs = dict()
-		for tbl in ["tblStepDef","tblStep","tblOrderPos"]:
+		for tbl in self.tbls:
 			query = "SELECT * FROM "+tbl
 			qry = self.cur.execute(query)
 			df = pd.DataFrame(qry.fetchall())
@@ -50,7 +50,7 @@ class Connection:
 				dfs[tbl].to_excel(writer, sheet_name=tbl, index=False)
 
 if __name__ == '__main__':
-	c=Connection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
+	c=DBConnection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
 	c.connect()
 	if True:
 		asyncio.run(c.run_async(timeout=5))
