@@ -2,9 +2,6 @@ import pandas as pd
 import numpy as np
 import json
 
-from plantsim.plantsim import Plantsim
-from plantsim.table import Table
-
 def running_orders(input_file:str,output_file:str=''):
     with open('config.json') as f:
         paths = json.load(f)

@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     dt = DTInterface("127.0.0.1:5000")
     dbc = DBConnection(output_file=db_file)
-    ec = EventCreator(db_file,output_filename='log.json')
+    ec = EventCreator(db_file,output_file='log.json')
     t = Trigger(db_file)
 
     ctrl = SmartController()
