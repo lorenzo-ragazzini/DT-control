@@ -38,7 +38,7 @@ class EventCreator:
         sleep(timeout)
     async def run_async(self,timeout):
         self.process()
-        asyncio.sleep(timeout)
+        await asyncio.sleep(timeout)
         
 if __name__ == '__main__':
     log = list()

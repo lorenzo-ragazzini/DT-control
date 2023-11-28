@@ -8,4 +8,4 @@ async def create_files(input_file,output_file_po,output_file_ro,timeout,ctrl:Sma
     running_orders(input_file,output_file=output_file_ro)
     if ctrl:
         ctrl.systemModel['orders'] = po
-    asyncio.sleep(timeout)
+    await asyncio.sleep(timeout)

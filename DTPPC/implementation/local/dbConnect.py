@@ -31,7 +31,7 @@ class DBConnection:
 			while True:
 				dfs = self.process()
 				self.save(dfs)
-				asyncio.sleep(timeout)
+				await asyncio.sleep(timeout)
 		except: #disconnect in case of error
 			self.disconnect()
 	def process(self):
