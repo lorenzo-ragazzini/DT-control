@@ -7,6 +7,8 @@ class DBConnection:
 	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos"]):
 		self.tbls = tbls
 		self.path_to_file = output_file
+		self.conn = None
+		self.cur = None
 	def connect(self):
 		self.conn = pyodbc.connect(r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:/MES4/FestoMES.accdb;")
 		self.cur = self.conn.cursor()
@@ -15,11 +17,14 @@ class DBConnection:
 		self.conn.close()
 	def run(self,timeout):
 		try:
+			if not self.conn:
+				self.connect()
 			while True:
 				dfs = self.process()
 				self.save(dfs)
 				sleep(timeout)
-		except: #disconnect in case of error
+		except Exception: #disconnect in case of error
+			print(Exception)
 			self.disconnect()
 	async def run_async(self,timeout):
 		try:

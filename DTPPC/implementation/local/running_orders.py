@@ -3,9 +3,6 @@ import numpy as np
 import json
 
 def running_orders(input_file:str,output_file:str=''):
-    with open('config.json') as f:
-        paths = json.load(f)
-        input_path = paths['input_path']
     tblOrderPos_dataframe=pd.read_excel(input_file, sheet_name="tblOrderPos")
     tblStep_dataframe = pd.read_excel(input_file, sheet_name="tblStep")
     tblOrderPos_dataframe['ONo'] = tblOrderPos_dataframe['ONo'].astype(str)+'-'+tblStep_dataframe['OPos'].astype(str)
