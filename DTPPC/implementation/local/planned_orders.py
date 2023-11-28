@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import json
 
-def planned_orders(simple=True):
+def planned_orders(simple=False):
     with open('config.json') as f:
         paths = json.load(f)
         input_path = paths['input_path']
@@ -43,17 +43,13 @@ def planned_orders(simple=True):
     print(f"Order_Table has been created")
     return df_orders
 
-'''
-def planned_orders_simplified():
-    with open('config.json') as f:
-        paths = json.load(f)
-        input_path = paths['input_path']
-    df_orderpos = pd.read_excel(fr"{input_path}\MESb.xlsx", sheet_name="tblOrderPos")
+def planned_orders_simplified(input_filename:str,input_path:str,output_filename:str=''):
+    df_orderpos = pd.read_excel(input_path+"/"+input_filename, sheet_name="tblOrderPos")
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
     df['Number']=1
     df['WPNo'] = df_orderpos['WPNo']
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-    df.to_excel(fr"{input_path}\Order_Table.xlsx", index=False)
+    if output_filename != '':
+        df.to_excel(input_path+"/"+output_filename, index=False)
     return df
-'''
