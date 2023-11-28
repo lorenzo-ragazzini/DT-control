@@ -5,13 +5,24 @@ from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 import asyncio
 
 class SmartController(SmartController):
+    def __init__(self):
+        super().__init__()
+        self.systemModel.update({'orders':[]})
+        self.decisionVariables = {'sequence':list(range(1,1+self.n_orders))}
+        self.decisionVariables['admission'] = [False for i in range(self.n_orders)]
+        self.systemModel.update({'WIP':0})
+        self.actuator = None
+    @property
+    def n_orders(self):
+        return len(self.systemModel['orders'])
     async def send_async(self,event):
         print(event)
         super().send(event)
     def execute(self, c: ControlPolicy):
         print(type(c))
-        super().execute(c)
-        print(self.decisionVariables)
+        dv = super().execute(c)
+        print(dv)
+        self.actuator.act(dv)
 
 class Rule1(ControlRule):
     trigger = 'new'

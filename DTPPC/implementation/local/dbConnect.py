@@ -17,11 +17,11 @@ class DBConnection:
 		self.conn.close()
 	def run(self,timeout):
 		try:
-			if not self.conn:
-				self.connect()
 			while True:
+				self.connect()
 				dfs = self.process()
 				self.save(dfs)
+				self.disconnect()
 				sleep(timeout)
 		except Exception: #disconnect in case of error
 			print(Exception)
@@ -29,8 +29,10 @@ class DBConnection:
 	async def run_async(self,timeout):
 		try:
 			while True:
+				self.connect()
 				dfs = self.process()
 				self.save(dfs)
+				self.disconnect()
 				await asyncio.sleep(timeout)
 		except: #disconnect in case of error
 			self.disconnect()

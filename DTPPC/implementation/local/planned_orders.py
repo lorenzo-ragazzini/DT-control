@@ -29,10 +29,10 @@ def planned_orders(simple=False):
         print(f"WPNo_OpNo_ProcTime tables have been created")
     df=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
-    # df['Number']=1
+    df['Number']=1
     df['WPNo'] = df_orderpos['WPNo']
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-    df['Enabled'] = df_orderpos['Enabled']
+    # df['Enabled'] = df_orderpos['Enabled']
 
     # Esportare la tabella in un file Excel
     df.to_excel(fr"{input_path}\Order_Table.xlsx", index=False)
@@ -45,10 +45,10 @@ def planned_orders_simplified(input_file:str,output_file:str=''):
     df_orderpos['Enabled'] = df_orders.loc[df_orders.ONo == df_orderpos.ONo,"Enabled"]
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
-    # df['Number']=1
+    df['Number']=1
     df['WPNo'] = df_orderpos['WPNo']
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-    df['Enabled'] = df_orderpos['Enabled']
+    # df['Enabled'] = df_orderpos['Enabled']
     if output_file != '':
         df.to_excel(output_file, index=False)
     return df
