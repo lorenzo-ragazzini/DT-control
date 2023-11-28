@@ -6,9 +6,9 @@ from DTPPC.implementation.local.events import EventCreator
 
 
 class Trigger(EventCreator):
-    def __init__(self,input_path,input_filename,controller:SmartController=None):
+    def __init__(self,input_file,controller:SmartController=None):
         self.controller = controller
-        super().__init__(input_path,input_filename,output_file=None)
+        super().__init__(input_file,output_file=None)
     def process(self):
         events = self.events()
         for event in events:
