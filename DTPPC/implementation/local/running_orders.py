@@ -5,12 +5,12 @@ import json
 from plantsim.plantsim import Plantsim
 from plantsim.table import Table
 
-def running_orders(input_path:str,output_path:str=''):
+def running_orders(input_file:str,output_file:str=''):
     with open('config.json') as f:
         paths = json.load(f)
         input_path = paths['input_path']
-    tblOrderPos_dataframe=pd.read_excel(input_path, sheet_name="tblOrderPos")
-    tblStep_dataframe = pd.read_excel(input_path, sheet_name="tblStep")
+    tblOrderPos_dataframe=pd.read_excel(input_file, sheet_name="tblOrderPos")
+    tblStep_dataframe = pd.read_excel(input_file, sheet_name="tblStep")
     tblOrderPos_dataframe['ONo'] = tblOrderPos_dataframe['ONo'].astype(str)+'-'+tblStep_dataframe['OPos'].astype(str)
     tblStep_dataframe['ONo'] = tblStep_dataframe['ONo'].astype(str)+'-'+tblStep_dataframe['OPos'].astype(str)
     # ONos=tblOrderPos_dataframe.loc[~tblOrderPos_dataframe.Start.isna() & tblOrderPos_dataframe.End.isna(),'ONo'].values
@@ -42,8 +42,8 @@ def running_orders(input_path:str,output_path:str=''):
             pass
     tblStep_dataframe['Start'] = np.where(tblStep_dataframe['Start'].notna(), 1, 0)
     tblStep_dataframe = tblStep_dataframe[['WPNo','ONo','OpNo','ResourceID','Start']]
-    if output_path != '':
-        tblStep_dataframe.to_excel(output_path, index=False)
+    if output_file != '':
+        tblStep_dataframe.to_excel(output_file, index=False)
     return tblStep_dataframe
 
 if __name__ == '__main__':

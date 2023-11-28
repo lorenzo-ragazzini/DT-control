@@ -4,18 +4,17 @@ from time import sleep
 import asyncio
 
 class EventCreator:
-    def __init__(self,input_path,input_filename,output_filename=None):
+    def __init__(self,input_file:str,output_file:str=''):
         self.old = None
-        self.input_filename = input_filename
-        self.output_filename = output_filename
+        self.output_file = output_file
         self.log = list()
-        self.input_path = input_path
+        self.input_file = input_file
         '''
         with open('config.json') as f:
             self.input_path = json.load(f)['input_path']
         '''      
     def events(self):
-        new = pd.read_excel(self.input_path+self.input_filename,sheet_name='tblOrderPos') 
+        new = pd.read_excel(self.input_file,sheet_name='tblOrderPos') 
         if self.old is None:
             self.old = new
             return []
@@ -32,7 +31,7 @@ class EventCreator:
             print(pd.Timestamp.now(),event)
             self.log.append([pd.Timestamp.now(),event])
         if self.output_filename is not None:
-            with open(self.input_path+'/'+self.output_filename,'w') as f:
+            with open(self.output_file,'w') as f:
                 json.dump(self.log,f)
     def run(self,timeout):
         self.process()

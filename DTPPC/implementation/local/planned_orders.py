@@ -43,13 +43,13 @@ def planned_orders(simple=False):
     print(f"Order_Table has been created")
     return df_orders
 
-def planned_orders_simplified(input_filename:str,input_path:str,output_filename:str=''):
-    df_orderpos = pd.read_excel(input_path+"/"+input_filename, sheet_name="tblOrderPos")
+def planned_orders_simplified(input_file:str,output_file:str=''):
+    df_orderpos = pd.read_excel(input_file, sheet_name="tblOrderPos")
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
     df['Number']=1
     df['WPNo'] = df_orderpos['WPNo']
     df['Order']=df_orderpos['ONo'].astype(str) + '-' + df_orderpos['OPos'].astype(str)
-    if output_filename != '':
-        df.to_excel(input_path+"/"+output_filename, index=False)
+    if output_file != '':
+        df.to_excel(output_file, index=False)
     return df
