@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import json
 
-def planned_orders(simple=False):
+def planned_orders(simple=True):
     with open('config.json') as f:
         paths = json.load(f)
         input_path = paths['input_path']
