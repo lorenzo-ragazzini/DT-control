@@ -7,7 +7,12 @@ import asyncio
 
 class SmartController(SmartController):
     async def send_async(self,event):
+        print(event)
         super().send(event)
+    def execute(self, c: ControlPolicy):
+        print(type(c))
+        super().execute(c)
+        print(self.decisionVariables)
 
 class Rule1(ControlRule):
     trigger = 'new'
@@ -30,7 +35,17 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-def main():
+def main() -> SmartController:
+    ctrl = SmartController()
+    ctrl.dt = dt
+    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
+    ctrl.linkPolicies()
+    ctrl.map = ControlMap()
+    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+    return ctrl
+
+
+if __name__ == '__main__':
     dt = DigitalTwin()
     ctrl = SmartController()
     ctrl.dt = dt
@@ -39,6 +54,3 @@ def main():
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
     ctrl.send('start')
-
-if __name__ == '__main__':
-    main()
