@@ -11,15 +11,15 @@ from DTPPC.implementation.local.planned_orders import planned_orders
 
 if __name__ == '__main__':
 
-    filename = 'MESdata.xlsx'
-    file_path = ''
+    db_file = 'MESdata.xlsx'
     running_orders_file = ''
+    planned_orders_file = ''
     cloud_file_path = ''
 
     dt = DTInterface("127.0.0.1:5000")
-    dbc = DBConnection(file_path,filename)
-    ec = EventCreator(file_path,filename,output_filename='log.json')
-    t = Trigger(file_path,filename)
+    dbc = DBConnection(output_file=db_file)
+    ec = EventCreator(db_file,output_filename='log.json')
+    t = Trigger(db_file)
 
     ctrl = SmartController()
     ctrl.dt = dt
@@ -31,8 +31,9 @@ if __name__ == '__main__':
     t.controller = ctrl
 
     asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
-    asyncio.run(create_files(timeout=5,ctrl=ctrl)) # create input files
-    upload(running_orders_file,file_path,cloud_file_path,timeout=5) # upload files to Azure cloud
+    asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
+    running_orders_filename, running_orders_path = running_orders_file.rsplit('/',1)
+    upload(running_orders_file,running_orders_path,cloud_file_path,timeout=5) # upload files to Azure cloud
     asyncio.run(ec.run_async(5)) # read events
     asyncio.run(t.run_async(5)) # trigger events
 

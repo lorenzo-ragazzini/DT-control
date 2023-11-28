@@ -4,9 +4,9 @@ from time import sleep
 import asyncio
 
 class DBConnection:
-	def __init__(self,output_path:str,filename:str,tbls=["tblStepDef","tblStep","tblOrderPos"]):
+	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos"]):
 		self.tbls = tbls
-		self.path_to_file = output_path + '/' + filename
+		self.path_to_file = output_file
 	def connect(self):
 		self.conn = pyodbc.connect(r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:/MES4/FestoMES.accdb;")
 		self.cur = self.conn.cursor()
