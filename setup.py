@@ -18,7 +18,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires='==3.9',
+    python_requires='>=3.8',
     license="MIT",
     platforms="Python 3",
 )
