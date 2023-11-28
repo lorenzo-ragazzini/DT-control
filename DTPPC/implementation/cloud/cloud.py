@@ -18,3 +18,15 @@ def download(filename,local_file_path,cloud_file_path,timeout):
 def upload(filename,local_file_path,cloud_file_path,timeout):
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
     asyncio.run(uploader(s,timeout))
+
+async def download(filename,local_file_path,cloud_file_path,timeout):
+    s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
+    while True:
+        s.download()
+        await asyncio.sleep(timeout)
+
+async def upload(filename,local_file_path,cloud_file_path,timeout):
+    s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
+    while True:
+        s.upload()
+        await asyncio.sleep(timeout)
