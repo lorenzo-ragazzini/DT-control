@@ -1,7 +1,8 @@
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
+from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
 from DTPPC.controller import SmartController
-from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
+from DTPPC.controller.modules import SetObjective, SetWIP
 import asyncio
 
 class SmartController(SmartController):
@@ -38,25 +39,26 @@ class Rule1(ControlRule):
 class Rule2(ControlRule):
     trigger = 'completion'
     def run(self,event):
-        return [UpdateWIP]
+        self._controller.systemModel['WIP'] -= 1
+        return []
     
 class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
-        # return [SetWIP,GenerateSchedule]
-        return [GenerateSchedule]    
-
+        return [GenerateSchedule,SetWIP,SetObjective]    
+    
 class Rule4(ControlRule):
-    trigger = '?'
+    trigger = 'arrival'
     def run(self,event):
-        return [SetObjective]
+        return [FIFODispatchingRule]
     
 def create_controller() -> SmartController:
     ctrl = SmartController()
-    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+    ctrl.linkRules()
     return ctrl
 
 
@@ -68,4 +70,5 @@ if __name__ == '__main__':
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+    ctrl.linkRules()
     ctrl.send('start')

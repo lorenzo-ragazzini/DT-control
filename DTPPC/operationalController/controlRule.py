@@ -6,6 +6,9 @@ from .controlModule import ControlModule
 class ControlRule:
     trigger:None
     target:Iterable[Type]
+    def __init__(self) -> None:
+        self._controller = None
+        self._controlMap = None
     def __call__(self,event) -> Iterable[Union[ControlPolicy,ControlModule]]:
         if event == self.trigger:
             return self.run(event)

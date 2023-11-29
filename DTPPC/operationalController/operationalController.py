@@ -20,6 +20,11 @@ class OperationalController:
     def linkPolicies(self):
         for cp in self.policies+self.modules:
             cp._controller = self
+    def linkRules(self):
+        self.map._controller = self
+        for rule in self.map.rules:
+            rule._controller = self
+            rule._map = self.map
     def send(self,event):
         policies:Iterable[Type[Union[ControlPolicy,ControlModule]]] = self.map(event)
         for cp in policies:
