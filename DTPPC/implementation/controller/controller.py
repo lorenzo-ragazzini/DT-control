@@ -14,9 +14,9 @@ class SmartController(SmartController):
         self.actuator = None
     def init_dv(self):
         orders = self.systemModel['orders']['Order']
-        sequence = pd.DataFrame(data=list(range(self.n_orders)), index=orders, columns=["sequence"])
-        admission = pd.DataFrame(data=True, index=orders, columns=["admission"])
-        self.decisionVariables.update("sequence":sequence,"admission":admission)
+        sequence = dict(zip(orders, list(range(self.n_orders))))
+        admission = dict(zip(orders, [True for i in range(self.n_orders)]))
+        self.decisionVariables.update({"sequence":sequence,"admission":admission})
     @property
     def n_orders(self):
         return len(self.systemModel['orders'])
@@ -50,7 +50,7 @@ class Rule4(ControlRule):
     trigger = '?'
     def run(self,event):
         return [SetObjective]
-
+    
 def create_controller() -> SmartController:
     ctrl = SmartController()
     ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
