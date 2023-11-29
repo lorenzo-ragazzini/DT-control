@@ -14,13 +14,20 @@ class DispatchingRule(ControlPolicy):
     @abstractmethod
     def sort(jobs):
         pass
+    def dictmax(self,items):
+        if not items:
+            return 0
+        else: 
+            return items[max(items)]
 
 class FIFODispatchingRule(DispatchingRule):
     def sort(self,new_orders,sequence):
         for order in new_orders:
-            sequence[order] = sequence[max(sequence)] + 1
+            sequence[order] = self.dictmax(sequence) + 1
+        return sequence
 
 class LIFODispatchingRule(DispatchingRule):
     def sort(self,new_orders,sequence):
         for order in reversed(new_orders):
-            sequence[order] = sequence[max(sequence)] + 1
+            sequence[order] = self.dictmax(sequence) + 1
+        return sequence

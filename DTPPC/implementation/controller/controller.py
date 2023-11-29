@@ -9,15 +9,16 @@ class SmartController(SmartController):
     def __init__(self):
         super().__init__()
         self.systemModel.update({'orders':[]})
-        self.decisionVariables = {'sequence':list(range(1,1+self.n_orders))}
-        self.decisionVariables['admission'] = [False for i in range(self.n_orders)]
+        self.decisionVariables = {'sequence':dict(), "admission":dict()}
         self.systemModel.update({'WIP':0})
         self.actuator = None
+    '''
     def init_dv(self):
         orders = self.systemModel['orders']['Order']
         sequence = dict(zip(orders, list(range(self.n_orders))))
         admission = dict(zip(orders, [True for i in range(self.n_orders)]))
         self.decisionVariables.update({"sequence":sequence,"admission":admission})
+    '''
     @property
     def n_orders(self):
         return len(self.systemModel['orders'])
@@ -52,12 +53,17 @@ class Rule4(ControlRule):
     def run(self,event):
         return [FIFODispatchingRule]
     
+class Rule5(ControlRule):
+    trigger = 'startUnscheduled'
+    def run(self,event):
+        return [FIFODispatchingRule]
+    
 def create_controller() -> SmartController:
     ctrl = SmartController()
     ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
-    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4(), Rule5()]
     ctrl.linkRules()
     return ctrl
 

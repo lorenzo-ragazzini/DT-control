@@ -7,5 +7,6 @@ class ExecuteSchedule(ControlPolicy):
         admission = self._controller.decisionVariables['admission']
         if len(sequence)>0:
             index = min(sequence)
-            admission.pop(index), sequence.pop(index)
+            if admission[index]:
+                admission.pop(index), sequence.pop(index)
             return {'sequence' : sequence, 'admission' : admission}

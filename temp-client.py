@@ -13,6 +13,7 @@ from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 if __name__ == '__main__':
 
     db_file = 'MESdata.xlsx'
+    db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
     running_orders_file = os.getcwd()+'\WorkInProcess.xlsx'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
@@ -33,17 +34,18 @@ if __name__ == '__main__':
     ctrl.dt = dt
     t.controller = ctrl
     ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
-    ctrl.init_dv()
     #debug
-    asyncio.run(ctrl.send_async('arrival'))
+    asyncio.run(ctrl.send_async('startUnscheduled'))
+    asyncio.run(ctrl.send_async('completion'))
 
     # asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
     # asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
     # running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     # running_orders_path += "\\"
     # asyncio.run(upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5)) # upload files to Azure cloud
-    # asyncio.run(ec.run_async(5)) # read events
+    asyncio.run(ec.run_async(5)) # read events
     # asyncio.run(t.run_async(5)) # trigger events
+    print('finished')
 
 '''
 dt = DTInterface("127.0.0.1:5000")

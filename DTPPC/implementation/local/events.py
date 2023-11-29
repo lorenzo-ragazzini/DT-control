@@ -1,4 +1,5 @@
 import json
+from typing import List
 import pandas as pd
 from time import sleep
 import asyncio
@@ -13,18 +14,25 @@ class EventCreator:
         with open('config.json') as f:
             self.input_path = json.load(f)['input_path']
         '''      
-    def events(self):
+    def events(self)->List[str]:
+        e = []
         new = pd.read_excel(self.input_file,sheet_name='tblOrderPos') 
         if self.old is None:
-            self.old = new
-            return []
+            self.old = new.copy(deep=True)
+            return e
+        if len(new) != len(self.old):
+            e.append('arrival')
         df=pd.concat([self.old,new]).drop_duplicates(keep=False).fillna(0).reset_index()
-        if len(df) == 0:
-            return []
-        different_columns = df.loc[0].ne(df.loc[1])
-        result = different_columns[different_columns].index.tolist()
-        self.old = new
-        return result
+        if len(df) > 0:
+            different_columns = df.loc[0].ne(df.loc[1])
+            diff_cols = different_columns[different_columns].index.tolist()
+            self.old = new
+            if 'End' in diff_cols:
+                e.append('completion')
+            elif 'Start' in diff_cols:
+                pass
+        self.old = new.copy(deep=True)
+        return e
     def process(self)->None:
         events = self.events()
         for event in events:
