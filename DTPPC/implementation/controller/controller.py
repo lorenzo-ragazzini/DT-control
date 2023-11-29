@@ -12,6 +12,11 @@ class SmartController(SmartController):
         self.decisionVariables['admission'] = [False for i in range(self.n_orders)]
         self.systemModel.update({'WIP':0})
         self.actuator = None
+    def init_dv(self):
+        orders = self.systemModel['orders']['Order']
+        sequence = pd.DataFrame(data=list(range(self.n_orders)), index=orders, columns=["sequence"])
+        admission = pd.DataFrame(data=True, index=orders, columns=["admission"])
+        self.decisionVariables.update("sequence":sequence,"admission":admission)
     @property
     def n_orders(self):
         return len(self.systemModel['orders'])

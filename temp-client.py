@@ -33,6 +33,7 @@ if __name__ == '__main__':
     ctrl.dt = dt
     t.controller = ctrl
     ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
+    ctrl.init_dv()
     #debug
     asyncio.run(ctrl.send_async('start'))
 
