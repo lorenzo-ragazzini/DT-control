@@ -1,5 +1,5 @@
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
-from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
+from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 import asyncio
@@ -28,7 +28,7 @@ class SmartController(SmartController):
 class Rule1(ControlRule):
     trigger = 'new'
     def run(self,event):
-        return [Release,ExecuteSchedule]
+        return [ReleaseOne,ExecuteSchedule]
         
 class Rule2(ControlRule):
     trigger = 'completion'
@@ -49,7 +49,7 @@ class Rule4(ControlRule):
 def create_controller() -> SmartController:
     ctrl = SmartController()
     ctrl.dt = dt
-    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     dt = DigitalTwin()
     ctrl = SmartController()
     ctrl.dt = dt
-    ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]

@@ -1,6 +1,6 @@
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.digitaltwin import DigitalTwin
-from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, Release
+from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP, UpdateWIP
 from DTPPC.implementation.local.planned_orders import planned_orders
@@ -9,7 +9,7 @@ import asyncio
 class Rule1(ControlRule):
     trigger = 'new'
     def run(self,event):
-        return [Release,ExecuteSchedule]
+        return [ReleaseOne,ExecuteSchedule]
         
 class Rule2(ControlRule):
     trigger = 'completion'

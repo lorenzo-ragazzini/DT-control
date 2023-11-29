@@ -2,7 +2,7 @@
 from DTPPC.operationalController import ControlPolicy
 from numpy import inf
 
-class Release(ControlPolicy):
+class ReleaseOne(ControlPolicy):
     inputParameters = ['WIP']
     def __init__(self,WIPlimit=inf):
         self.WIPlimit = WIPlimit
