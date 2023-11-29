@@ -29,6 +29,7 @@ class EventCreator:
             self.old = new
             if 'End' in diff_cols:
                 e.append('completion')
+                e.append('new')
             elif 'Start' in diff_cols:
                 pass
         self.old = new.copy(deep=True)
