@@ -61,7 +61,6 @@ def create_controller() -> SmartController:
     ctrl.linkRules()
     return ctrl
 
-
 if __name__ == '__main__':
     from DTPPC.digitaltwin import DigitalTwin
     dt = DigitalTwin()
