@@ -15,12 +15,12 @@ from pymoo.termination.default import DefaultSingleObjectiveTermination
 
 class GenerateSchedule(ControlPolicy):
     inputParameters = ['orders']
-    def fitness_function(self,sequence,taskResourceInformation,name):
+    def fitness_function(self,sequence,taskResourceInformation,DTname):
         taskResourceInformation = taskResourceInformation.to_dict()
         ctrlUpdate = {"executeSchedule":{"sequence":(sequence+1).tolist()}}
         req = SimulationRequest()
         req['output'] = ['Cmax']
-        res = self._controller.dt.interface(name,taskResourceInformation,ctrlUpdate,req)
+        res = self._controller.dt.interface(DTname,taskResourceInformation,ctrlUpdate,req)
         return (res['Cmax'])
 
     class OrderOptimizationProblem(Problem):
@@ -31,15 +31,15 @@ class GenerateSchedule(ControlPolicy):
         def _evaluate(self, x, out, *args, **kwargs):
             n_individuals = x.shape[0]
             fitness_values = np.zeros((n_individuals, 1))
-            name = self.controlPolicy._controller.dt.new()
+            DTname = self.controlPolicy._controller.dt.new()
             for i in range(n_individuals):
                 sequence = x[i].astype(int)
-                throughput = self.controlPolicy.fitness_function(sequence,self.taskResourceInformation,name)
+                throughput = self.controlPolicy.fitness_function(sequence,self.taskResourceInformation,DTname)
                 # ordered_df = self.df.iloc[order]
                 # throughput = self.instance.fitness_function(ordered_df)
                 fitness_values[i, 0] = (-1.0) * throughput
             out["F"] = fitness_values
-            self.controlPolicy._controller.dt.clear(name)
+            self.controlPolicy._controller.dt.clear(DTname)
             return fitness_values 
         
     def solve(self,**kwargs):
