@@ -48,7 +48,6 @@ class Rule4(ControlRule):
 
 def create_controller() -> SmartController:
     ctrl = SmartController()
-    ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
@@ -60,7 +59,6 @@ if __name__ == '__main__':
     from DTPPC.digitaltwin import DigitalTwin
     dt = DigitalTwin()
     ctrl = SmartController()
-    ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()

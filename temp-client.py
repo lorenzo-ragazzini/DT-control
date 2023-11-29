@@ -8,7 +8,7 @@ from DTPPC.implementation.controller.controller import create_controller, SmartC
 from DTPPC.implementation.local.create_files import create_files
 from DTPPC.implementation.local.dbConnect import DBConnection
 from DTPPC.implementation.local.events import EventCreator
-from DTPPC.implementation.local.planned_orders import planned_orders
+from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 if __name__ == '__main__':
 
@@ -21,15 +21,20 @@ if __name__ == '__main__':
     dbc = DBConnection(output_file=db_file)
     ec = EventCreator(db_file,output_file='log.json')
     t = Trigger(db_file)
-
+    '''
     ctrl = SmartController()
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
+    '''
     ctrl = create_controller()
+    ctrl.dt = dt
     t.controller = ctrl
+    ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
+    #debug
+    asyncio.run(ctrl.send_async('start'))
 
     # asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
     # asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
