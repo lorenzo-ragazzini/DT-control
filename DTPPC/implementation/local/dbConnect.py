@@ -25,7 +25,10 @@ class DBConnection:
 				sleep(timeout)
 		except Exception: #disconnect in case of error
 			print(Exception)
+		try:
 			self.disconnect()
+		except:
+			pass
 	async def run_async(self,timeout):
 		try:
 			while True:
