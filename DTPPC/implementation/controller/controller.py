@@ -4,6 +4,7 @@ from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP
 import asyncio
+import time
 
 class SmartController(SmartController):
     def __init__(self):
@@ -42,6 +43,15 @@ class Rule2(ControlRule):
     def run(self,event):
         self._controller.systemModel['WIP'] -= 1
         return []
+
+class Rule2bis(ControlRule):
+    trigger = 'completion'
+    def run(self,event):
+        self.run_delayed()
+        return []
+    def run_delayed(self):
+        time.sleep(2)
+        asyncio.run(self._controller.send_async('new'))
     
 class Rule3(ControlRule):
     trigger = 'start'
