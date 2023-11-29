@@ -22,7 +22,8 @@ class SmartController(SmartController):
         print(type(c))
         dv = super().execute(c)
         print(dv)
-        self.actuator.act(dv)
+        if self.actuator:
+            self.actuator.act(dv)
 
 class Rule1(ControlRule):
     trigger = 'new'
@@ -45,7 +46,7 @@ class Rule4(ControlRule):
     def run(self,event):
         return [SetObjective]
 
-def main() -> SmartController:
+def create_controller() -> SmartController:
     ctrl = SmartController()
     ctrl.dt = dt
     ctrl.policies = [ExecuteSchedule(), Release(WIPlimit=5), GenerateSchedule(), SetWIP()]
