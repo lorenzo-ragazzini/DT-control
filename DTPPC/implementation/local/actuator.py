@@ -15,7 +15,7 @@ class Actuator(DBConnection):
             keys = key.split('-')  # Split the key by '-'
             new_dv[int(keys[0]), int(keys[1])] = value
         return new_dv
-    def sort(self):
+    def sort(self, dv) -> None:
         self.connect()
         df = self.process()['tblOrderPos']
         # debug
@@ -32,7 +32,7 @@ class Actuator(DBConnection):
         df = pd.concat([df_active,df_inactive],ignore_index=True)
         self.write(df,"tblOrderPos")
         self.disconnect()
-    def release(self):
+    def release(self, dv) -> None:
         self.connect()
         df = self.process()['tblOrder']
         # debug
