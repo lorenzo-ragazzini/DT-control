@@ -3,48 +3,56 @@
 from typing import List
 from DTPPC.implementation.local.dbConnect import DBConnection
 import pyodbc
+import pandas as pd
+from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 class Actuator(DBConnection):
     def act(self,dvs):
         pass
-    def sort_table(self,table_name, index_column):
-        fetch_query = (
-            f"SELECT * FROM {table_name} "
-        )
-        self.cursor.execute(fetch_query)
-        rows_to_update = self.cursor.fetchall()
+    def new_dict(self,dv:dict)->dict:
+        new_dv = dict()
+        for key, value in dv.items():
+            keys = key.split('-')  # Split the key by '-'
+            new_dv[int(keys[0]), int(keys[1])] = value
+        return new_dv
+    def sort(self):
+        self.connect()
+        df = self.process()['tblOrderPos']
+        # debug
+        # dv = {"6618-1":1,"6619-1":2}
+        # df = pd.read_excel("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx",sheet_name="tblOrderPos")
+        dv = self.new_dict(dv)
 
-        # Filter out rows where 'Start' is not empty
-        non_empty_start_rows = [row for row in rows_to_update if row.Start != '']
+        df_active = df.loc[~df['Start'].isna()]
+        df_inactive = df.loc[df['Start'].isna()]
 
-        # Sort rows where 'Start' is empty based on the provided triplet
-        sorted_empty_start_rows = sorted(
-            [row for row in rows_to_update if row.Start == ''],
-            key=lambda row: (row[triplet[0]], row[triplet[1]], row[triplet[2]])
-        )
+        df_inactive['sorting_values'] = df_inactive.apply(lambda row:dv.get((row['ONo'], row['OPos']), 0),axis=1)
+        df_inactive.sort_values('sorting_values').drop('sorting_values', axis=1, inplace=True)
 
-        # Update the positions of sorted rows where 'Start' is empty in the original table
-        for idx, row in enumerate(sorted_empty_start_rows):
-            update_query = (
-                f"UPDATE {table_name} "
-                f"SET [ONo]='{row[0]}', [OPos]='{row[1]}' "
-                f"WHERE PrimaryKey='{row.PrimaryKey}';"
-            )
-            cursor.execute(update_query)
+        df = pd.concat([df_active,df_inactive],ignore_index=True)
+        self.write(df,"tblOrderPos")
+        self.disconnect()
+    def release(self):
+        self.connect()
+        df = self.process()['tblOrder']
+        # debug
+        # dv = {"6618-1":True,"6619-1":False}
+        # df = pd.read_excel("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx",sheet_name="tblOrder")
 
-        except pyodbc.Error as e:
-            print(f"Error executing the query: {e}")
-        except Exception as e:
-            print(f"Error executing the query: {e}")
-    def order(self,order:str)->List:
-        return [int(i) for i in order.split(" - ")]
+        df_active = df.loc[~df['Start'].isna()]
+        df_inactive = df.loc[df['Start'].isna()]
 
+        dv = self.new_dict(dv)
+        dv =  {key: value for d in [{key[0]:dv[key]} for key in dv.keys()] for key, value in d.items()}
 
+        df_inactive["Enable"] = df_inactive.apply(lambda row:dv.get((row["ONo"],1)),axis=1)
 
+        df = pd.concat([df_active,df_inactive],ignore_index=True)
+        self.write(df,"tblOrder")
+        self.disconnect()
+    def write(self,df:pd.DataFrame,table_name:str):
+        df.to_sql(table_name, self.conn, if_exists='replace', index=False)
 
-    def run(self):
-        pass
-    async def run_async(self):
-        pass
-    def process(self):
-        pass
+if __name__ == '__main__':
+    a = Actuator('')
+    a.sort()
