@@ -7,8 +7,11 @@ import pandas as pd
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 class Actuator(DBConnection):
-    def act(self,dvs):
-        pass
+    def act(self,dvs:dict) -> None:
+        if "sequence" in dvs.keys():
+            self.sort(dvs["sequence"])
+        if "admission" in dvs.keys():
+            self.release(dvs["admission"])
     def new_dict(self,dv:dict)->dict:
         new_dv = dict()
         for key, value in dv.items():
