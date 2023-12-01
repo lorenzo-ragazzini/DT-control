@@ -31,3 +31,7 @@ class LIFODispatchingRule(DispatchingRule):
         for order in reversed(new_orders):
             sequence[order] = self.dictmax(sequence) + 1
         return sequence
+    
+class SPTDispatchingRule(DispatchingRule):
+    def sort(self,new_orders,sequence):
+        pass
