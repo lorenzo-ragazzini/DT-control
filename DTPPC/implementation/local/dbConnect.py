@@ -4,9 +4,7 @@ from time import sleep
 import asyncio
 
 class DBConnection:
-	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos","tblOrder"]):
-		self.tbls = tbls
-		self.path_to_file = output_file
+	def __init__(self):
 		self.conn = None
 		self.cur = None
 	def connect(self):
@@ -15,6 +13,12 @@ class DBConnection:
 	def disconnect(self):
 		self.cur.close()
 		self.conn.close()
+
+class DBReader(DBConnection):
+	def __init__(self,output_file:str,tbls=["tblStepDef","tblStep","tblOrderPos","tblOrder"]):
+		self.tbls = tbls
+		self.path_to_file = output_file
+		super().__init__()
 	def run(self,timeout):
 		try:
 			while True:
@@ -60,7 +64,7 @@ class DBConnection:
 				dfs[tbl].to_excel(writer, sheet_name=tbl, index=False)
 
 if __name__ == '__main__':
-	c=DBConnection(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
+	c=DBReader(tbls=["tblStepDef","tblStep","tblOrderPos"],path_to_file='MESb.xlsx')
 	c.connect()
 	if True:
 		asyncio.run(c.run_async(timeout=5))

@@ -7,7 +7,7 @@ from DTPPC.implementation.flask.front import DTInterface
 from DTPPC.implementation.controller.controller import create_controller, SmartController, ExecuteSchedule, ReleaseOne, GenerateSchedule, SetWIP, ControlMap, Rule1, Rule2, Rule3, Rule4
 from DTPPC.implementation.local.actuator import Actuator
 from DTPPC.implementation.local.create_files import create_files
-from DTPPC.implementation.local.dbConnect import DBConnection
+from DTPPC.implementation.local.dbConnect import DBReader
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     cloud_file_path = 'dt-input/'
 
     dt = DTInterface("127.0.0.1:5000")
-    dbc = DBConnection(output_file=db_file)
+    dbc = DBReader(output_file=db_file)
     ec = EventCreator(db_file,output_file='log.json')
     t = Trigger(db_file)
     '''
