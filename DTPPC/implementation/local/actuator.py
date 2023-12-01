@@ -20,9 +20,61 @@ class Actuator(DBConnection):
             keys = key.split('-')  # Split the key by '-'
             new_dv[int(keys[0]), int(keys[1])] = value
         return new_dv
-    def sort(self, dv) -> None:
+    def sort2(self,dv) -> None:
+        dv = {"6629-1":1,"6630-1":2}
+
+        dv = self.new_dict(dv)
+        min_ono, min_opos = min(dv, key=dv.get)
+
+        query = f"SELECT PlanedStart FROM tblOrderPos WHERE ONo = {min_ono} AND OPos = {min_opos}"
+        self.cur.execute(query)
+        min_planned_start = self.cur.fetchone()[0].strftime('%Y-%m-%d %H:%M:%S')
+
+
+        query = f"SELECT PlanedStart FROM tblOrderPos"
+        self.cur.execute(query)
+        print(self.cur.fetchall())
+
+        for key in dv:
+            ono, opos = key
+            seconds_to_add = dv[key]
+            update_query = f"UPDATE tblOrderPos SET PlanedStart = DateAdd('s', {seconds_to_add}, #{min_planned_start}#) WHERE (ONo = ? AND OPos = ?)"
+            self.cur.execute(update_query, (ono, opos))
+            self.conn.commit()  # Commit changes to the database
+
+        query = f"SELECT PlanedStart FROM tblOrderPos"
+        self.cur.execute(query)
+        print(self.cur.fetchall())
+
+        self.disconnect()
+
+    def release(self,dv):
+        dv = {"6629-1":True,"6630-1":True}
+
+        dv = self.new_dict(dv)
+
+        query = f"SELECT Enabled FROM tblOrder"
+        self.cur.execute(query)
+        print(self.cur.fetchall())
+
+        for key in dv:
+            ono, opos = key
+            is_enabled = dv[key]
+            update_query = f"UPDATE tblOrder SET Enabled = {is_enabled} WHERE ONo = ?"
+            self.cur.execute(update_query, ono)
+            self.conn.commit()  # Commit changes to the database
+
+        query = f"SELECT Enabled FROM tblOrder"
+        self.cur.execute(query)
+        print(self.cur.fetchall())
+
+    def old_sort(self, dv) -> None:
         self.connect()
         df = self.process()['tblOrderPos']
+
+        # i connect to a ms access db using pyodbc and self.conn, self.cur is cursor; now i need to get data from a table and update them according to some dataframe (dv)
+
+
         # debug
         # dv = {"6618-1":1,"6619-1":2}
         # df = pd.read_excel("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx",sheet_name="tblOrderPos")
@@ -37,7 +89,7 @@ class Actuator(DBConnection):
         df = pd.concat([df_active,df_inactive],ignore_index=True)
         self.write(df,"tblOrderPos")
         self.disconnect()
-    def release(self, dv) -> None:
+    def old_release(self, dv) -> None:
         self.connect()
         df = self.process()['tblOrder']
         # debug
@@ -65,5 +117,10 @@ class Actuator(DBConnection):
         pass
 
 if __name__ == '__main__':
-    a = Actuator('')
-    a.sort()
+    class Actuator(Actuator):
+        def connect(self):
+            self.conn = pyodbc.connect(r"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=D:/FestoMES.accdb;")
+            self.cur = self.conn.cursor()
+    a = Actuator()
+    a.connect()
+    a.release("")
