@@ -8,7 +8,7 @@ from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 class Actuator(DBConnection):
     def __init__(self):
-        super().__init__(output_file='', tbls=[])
+        super().__init__()
     def act(self,dvs:dict) -> None:
         if "sequence" in dvs.keys():
             self.sort(dvs["sequence"])

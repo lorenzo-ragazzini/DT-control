@@ -10,6 +10,7 @@ class DTInterface:
         requests.post(self.url+'/clear',json=data)
     def interface(self,name,taskResourceInformation,controlUpdate,request):
         headers = {'Content-Type': 'application/json'}
+        controlUpdate['ExecuteSchedule']['sequence'] = [controlUpdate['ExecuteSchedule']['sequence'][key] for key in taskResourceInformation['Order'].values()]
         inputs = json.dumps({"name":name, "taskResourceInformation":taskResourceInformation, "controlUpdate":controlUpdate, "request":request})
         res = requests.post(self.url+'/run', json=inputs, headers=headers)
         # res = requests.get(self.url+'/run',json=inputs,headers=headers) # inutile, ottieni lo stesso risultato

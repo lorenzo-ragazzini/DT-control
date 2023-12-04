@@ -17,7 +17,7 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-        self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx"]      
+        self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx","Util.xlsx"]      
     def start(self):
         self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
@@ -46,12 +46,12 @@ class DigitalTwin():
             df.to_excel(fr"{self.input_path}\Order_Table.xlsx", index=False)
     def update(self,controlUpdate:dict):
         try:
-            sequence = controlUpdate['executeSchedule']['sequence']
+            sequence = controlUpdate['ExecuteSchedule']['sequence']
             pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=True)
         except:
             pass
         try:
-            CONWIP_value = controlUpdate['admission']['CONWIP_value']
+            CONWIP_value = controlUpdate['ReleaseOne']['CONWIP_value']
             pd.Series(CONWIP_value).to_excel(fr"{self.input_path}\ConwipValue.xlsx",index=False,header=False)
         except:
             pass
@@ -80,6 +80,7 @@ class DigitalTwin():
         self.output_path
         df = pd.read_excel(fr"{self.output_path}\FinishTimes.xlsx")
         df2 = pd.read_excel(fr"{self.output_path}\TotEnergyConsumption.xlsx")
+        df3 = pd.read_excel(fr"{self.output_path}\Util.xlsx")
         data = dict()
         if 'th' in request['output']:
             data["average_TH"] = 1/df["ExitTime"].diff().mean()
@@ -92,6 +93,8 @@ class DigitalTwin():
             data["total_energy_consumption"] = np.sum(df2.iloc[-1,1:].astype(float))
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
             data["Cmax"] = df['ExitTime'].max()
+        if "U" in request['output']:
+            data["U"] = df3.to_dict()
         return data
     
 class DigitalTwin(DigitalTwin):
@@ -147,4 +150,5 @@ if __name__ == '__main__':
     dt.start()
     dt.stop()
 
-
+def genControlUpdate(controller):
+    return {"ExecuteSchedule":{"sequence":controller.decisionVariables["sequence"]}, "ReleaseOne":{"CONWIP_value":controller.ReleaseOne.WIPlimit}}

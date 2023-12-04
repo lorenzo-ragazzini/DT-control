@@ -4,6 +4,7 @@ from numpy import inf
 
 class ReleaseOne(ControlPolicy):
     inputParameters = ['WIP']
+    controlParameters = ['WIPlimit']
     def __init__(self,WIPlimit=inf):
         self.WIPlimit = WIPlimit
     def solve(self,**kwargs):

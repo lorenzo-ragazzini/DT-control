@@ -1,3 +1,4 @@
+from DTPPC.controller.modules.bottleneckControl import BottleneckControl
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
@@ -13,13 +14,11 @@ class SmartController(SmartController):
         self.decisionVariables = {'sequence':dict(), "admission":dict()}
         self.systemModel.update({'WIP':0})
         self.actuator = None
-    '''
     def init_dv(self):
         orders = self.systemModel['orders']['Order']
-        sequence = dict(zip(orders, list(range(self.n_orders))))
+        sequence = dict(zip(orders, list(range(1,1+self.n_orders))))
         admission = dict(zip(orders, [True for i in range(self.n_orders)]))
         self.decisionVariables.update({"sequence":sequence,"admission":admission})
-    '''
     @property
     def n_orders(self):
         return len(self.systemModel['orders'])
@@ -70,7 +69,7 @@ class Rule5(ControlRule):
     
 def create_controller() -> SmartController:
     ctrl = SmartController()
-    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule(), BottleneckControl()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4(), Rule5()]

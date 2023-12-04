@@ -38,8 +38,8 @@ if __name__ == '__main__':
     ctrl.actuator = act
     #debug
     ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
-    asyncio.run(ctrl.send_async('startUnscheduled'))
-    asyncio.run(ctrl.send_async('completion'))
+    ctrl.init_dv()
+    asyncio.run(ctrl.BottleneckControl.solve())
 
     # asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
     # asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
