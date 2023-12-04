@@ -111,8 +111,8 @@ class DigitalTwin(DigitalTwin):
         new_path, code_name = create_temp(model_path)
         self[code_name] = DigitalTwin()
         self[code_name].model_path = new_path + model_name
-        self[code_name].output_path = new_path + 'DB'
-        self[code_name].input_path = new_path + 'Output'
+        self[code_name].output_path = new_path + 'Output'
+        self[code_name].input_path = new_path + 'DB'
         return code_name
     def clear(self,name:str=None):
         if not name:
