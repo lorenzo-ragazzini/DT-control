@@ -136,6 +136,7 @@ def create_temp(source_folder):
         if not os.path.exists(destination_folder) and not os.path.isdir(destination_folder):
             break
     shutil.copytree(source_folder, destination_folder)
+    time.sleep(2)
     return destination_folder, string
 
 def _clean_win32com():

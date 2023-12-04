@@ -25,7 +25,7 @@ def run():
     input = json.loads(request.json)
     name = input.pop('name')
     if request.method == 'POST':
-        app.results[name] = app.dt.interface(**input)
+        app.results[name] = app.dt[name].interface(**input)
         return app.results[name]
     if request.method == 'GET':
         return app.results.pop(name)
