@@ -32,6 +32,10 @@ class DigitalTwin():
         for file in os.listdir(self.output_path):
             os.remove(self.output_path+'/'+file)
         self.plantsim.reset_simulation()
+        # multi-instance
+        with self.model_path.rsplit('/',1)[0] +'/' as path:
+            if 'temp' in path:
+                self.plantsim.execute_simtalk(f'modelPath := "{path}"')
         self.plantsim.start_simulation()
         for filename in self.output_filenames:       
             while not os.path.exists(os.path.join(self.output_path, filename)):
@@ -113,6 +117,8 @@ class DigitalTwin(DigitalTwin):
         self[code_name].model_path = new_path + model_name
         self[code_name].output_path = new_path + 'Output'
         self[code_name].input_path = new_path + 'DB'
+        self[code_name].instances[code_name] = self[code_name].instances.pop('base') # rename instance
+        #update model path
         return code_name
     def clear(self,name:str=None):
         if not name:
