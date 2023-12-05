@@ -1,4 +1,4 @@
-from DTPPC.controller.modules.bottleneckControl import BottleneckControl
+from DTPPC.controller.modules.bottleneckPrediction import BottleneckPrediction
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
@@ -69,7 +69,7 @@ class Rule5(ControlRule):
     
 def create_controller() -> SmartController:
     ctrl = SmartController()
-    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule(), BottleneckControl()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule(), BottleneckPrediction()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
     ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4(), Rule5()]
