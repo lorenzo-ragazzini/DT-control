@@ -33,9 +33,9 @@ class DigitalTwin():
             os.remove(self.output_path+'/'+file)
         self.plantsim.reset_simulation()
         # multi-instance
-        with self.model_path.rsplit('/',1)[0] +'/' as path:
-            if 'temp' in path:
-                self.plantsim.execute_simtalk(f'modelPath := "{path}"')
+        path = self.model_path.rsplit('/',1)[0] +'/'
+        if 'temp' in path:
+            self.plantsim.execute_simtalk(f'modelPath := "{path}"')
         self.plantsim.start_simulation()
         for filename in self.output_filenames:       
             while not os.path.exists(os.path.join(self.output_path, filename)):
@@ -81,10 +81,10 @@ class DigitalTwin():
         self.update(controlUpdate)
         return self.simulate(request)
     def output_analysis(self,request)->dict:
-        self.output_path
         df = pd.read_excel(fr"{self.output_path}\FinishTimes.xlsx")
         df2 = pd.read_excel(fr"{self.output_path}\TotEnergyConsumption.xlsx")
         df3 = pd.read_excel(fr"{self.output_path}\Util.xlsx")
+        df3 = df3.rename(columns={df3.columns[0]:'State'}).set_index('State')
         data = dict()
         if 'th' in request['output']:
             data["average_TH"] = 1/df["ExitTime"].diff().mean()
@@ -126,6 +126,7 @@ class DigitalTwin(DigitalTwin):
                 self._clear_instance(name)
         elif name in self.instances.keys():
             self._clear_instance(name)
+        return name
     def _clear_instance(self,name:str):
         dt = self.instances.pop(name)
         if dt.model_path != self.model_path: 
