@@ -11,45 +11,36 @@ from DTPPC.implementation.local.dbConnect import DBReader
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
-''' for compatibility with WIN7'''
 async def run_tasks(db_file,planned_orders_file,running_orders_file):
-
-    async def restart(task):
-        await task
-    
-    coroutines = [
-        dbc.run_async(timeout=5),  # convert MES accdb to xlsx
-        create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
-        ec.run_async(5),  # read events
-        trigger.run_async(5)  # trigger events
-    ]
-    tasks = [asyncio.create_task(coro) for coro in coroutines]
+    ''' For compatibility with Windows 7'''
+    def get_coroutines():
+        coroutines = [
+            dbc.run_async(timeout=5),  # convert MES accdb to xlsx
+            create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
+            ec.run_async(5),  # read events
+            trigger.run_async(5)  # trigger events
+        ]
+        return coroutines
+    tasks = [asyncio.create_task(coro) for coro in get_coroutines()]
 
     while True:
         done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-        print(' ')
-        print(' ')
-        print(tasks)
-        print(' ')
-        print(done)
-        print(' ')
-        print(' ')
         for task in done:
+            index = tasks.index(task)
             tasks.remove(task)
-            new_task = asyncio.create_task(restart(task._coro))
+            new_task = asyncio.create_task(get_coroutines()[index])
             tasks.append(new_task)
 
-			
-			
+		
 if __name__ == '__main__':
-
+    debug = False
     db_file = 'MESdata.xlsx'
-	if debug == True:
-    	db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
+    if debug == True:
+        db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
     running_orders_file = os.getcwd()+'\WorkInProcess.xlsx'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
-	address="127.0.0.1:5000" 
+    address="127.0.0.1:5000" 
 
     dt = DTInterface(address) 
     dbc = DBReader(output_file=db_file) # read ACCDB as defined in DBReader class, write db_file
