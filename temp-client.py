@@ -39,15 +39,19 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
             new_task = asyncio.create_task(restart(task._coro))
             tasks.append(new_task)
 
+			
+			
 if __name__ == '__main__':
 
     db_file = 'MESdata.xlsx'
-    #db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
+	if debug == True:
+    	db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
     running_orders_file = os.getcwd()+'\WorkInProcess.xlsx'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
+	address="127.0.0.1:5000" 
 
-    dt = DTInterface("127.0.0.1:5000") 
+    dt = DTInterface(address) 
     dbc = DBReader(output_file=db_file) # read ACCDB as defined in DBReader class, write db_file
     ec = EventCreator(db_file,output_file='log.json') # create log.json file listening to events
     trigger = Trigger(db_file) # trigger > self.controller
