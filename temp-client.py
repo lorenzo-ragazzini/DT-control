@@ -11,12 +11,11 @@ from DTPPC.implementation.local.dbConnect import DBReader
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
-
 ''' for compatibility with WIN7'''
 async def run_tasks(db_file,planned_orders_file,running_orders_file):
 
     async def restart(task):
-        await task()
+        await task
     
     coroutines = [
         dbc.run_async(timeout=5),  # convert MES accdb to xlsx
@@ -48,29 +47,22 @@ if __name__ == '__main__':
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
 
-    dt = DTInterface("127.0.0.1:5000")
-    dbc = DBReader(output_file=db_file)
-    ec = EventCreator(db_file,output_file='log.json')
-    trigger = Trigger(db_file)
-    '''
-    ctrl = SmartController()
-    ctrl.dt = dt
-    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP()]
-    ctrl.linkPolicies()
-    ctrl.map = ControlMap()
-    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4()]
-    '''
+    dt = DTInterface("127.0.0.1:5000") 
+    dbc = DBReader(output_file=db_file) # read ACCDB as defined in DBReader class, write db_file
+    ec = EventCreator(db_file,output_file='log.json') # create log.json file listening to events
+    trigger = Trigger(db_file) # trigger > self.controller
+   
     ctrl = create_controller()
     act = Actuator()
+	
     ctrl.dt = dt
     trigger.controller = ctrl
     ctrl.actuator = act
     
-    #debug
-    '''ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
-    ctrl.init_dv()
-    asyncio.run(ctrl.BottleneckPrediction.solve())'''
-
+    if debug == True:
+        ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
+        ctrl.init_dv()
+        asyncio.run(ctrl.BottleneckPrediction.solve())
 
     running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     running_orders_path += "\\"
