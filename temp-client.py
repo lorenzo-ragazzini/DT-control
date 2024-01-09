@@ -18,26 +18,26 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
     async def restart(task):
         await task()
     
-    tasks = [
+    coroutines = [
         dbc.run_async(timeout=5),  # convert MES accdb to xlsx
         create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
         ec.run_async(5),  # read events
         trigger.run_async(5)  # trigger events
     ]
+    tasks = [asyncio.create_task(coro) for coro in coroutines]
 
     while True:
-        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+        done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
         print(' ')
         print(' ')
         print(tasks)
         print(' ')
         print(done)
         print(' ')
-        print(pending)
         print(' ')
-        for completed_task in done:
-            tasks.remove(completed_task)
-            new_task = restart(completed_task)
+        for task in done:
+            tasks.remove(task)
+            new_task = asyncio.create_task(task._coro)
             tasks.append(new_task)
 
 if __name__ == '__main__':
