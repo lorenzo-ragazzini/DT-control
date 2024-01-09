@@ -1,4 +1,4 @@
-import os
+from os import getcwd
 import requests
 import asyncio
 from DTPPC.implementation.cloud.cloud import upload as cloud_upload
@@ -34,13 +34,13 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
 
 		
 if __name__ == '__main__':
-    debug = False
-    mode = "WIN7"
+    debug:bool = False
+    mode:str = "WIN7"
     
     db_file = 'MESdata.xlsx'
     if debug == True:
         db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
-    running_orders_file = os.getcwd()+'\WorkInProcess.xlsx'
+    running_orders_file = getcwd()+'\WorkInProcess.xlsx'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
     address="127.0.0.1:5000" 
