@@ -27,7 +27,14 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
 
     while True:
         done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-
+        print(' ')
+        print(' ')
+        print(tasks)
+        print(' ')
+        print(done)
+        print(' ')
+        print(pending)
+        print(' ')
         for completed_task in done:
             tasks.remove(completed_task)
             new_task = restart(completed_task)
