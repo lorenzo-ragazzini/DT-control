@@ -3,7 +3,7 @@
 from time import sleep
 from DTPPC.operationalController import ControlModule
 from DTPPC.controller.misc import SimulationRequest
-from DTPPC.digitaltwin import genControlUpdate
+from DTPPC.controller.misc import genControlUpdate
 
 class BottleneckPrediction(ControlModule):
     def __init__(self,timeout=120) -> None:

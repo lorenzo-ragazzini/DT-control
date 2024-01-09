@@ -157,6 +157,3 @@ if __name__ == '__main__':
     dt = DigitalTwin()
     dt.start()
     dt.stop()
-
-def genControlUpdate(controller):
-    return {"ExecuteSchedule":{"sequence":controller.decisionVariables["sequence"]}, "ReleaseOne":{"CONWIP_value":controller.ReleaseOne.WIPlimit}}

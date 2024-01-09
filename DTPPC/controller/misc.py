@@ -7,3 +7,6 @@ class SimulationRequest(dict):
         self['nrOfSimul'] = 1
         self['output'] = ['th']
         super().__init__()
+
+def genControlUpdate(controller):
+    return {"ExecuteSchedule":{"sequence":controller.decisionVariables["sequence"]}, "ReleaseOne":{"CONWIP_value":controller.ReleaseOne.WIPlimit}}
