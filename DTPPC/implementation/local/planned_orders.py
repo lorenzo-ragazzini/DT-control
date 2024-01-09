@@ -42,7 +42,7 @@ def planned_orders(simple=False):
 def planned_orders_simplified(input_file:str,output_file:str=''):
     df_orderpos = pd.read_excel(input_file, sheet_name="tblOrderPos")
     df_orders = pd.read_excel(input_file, sheet_name="tblOrder")
-    df_orderpos['Enabled'] = df_orders.loc[df_orders.ONo == df_orderpos.ONo,"Enabled"]
+    df_orderpos['Enabled'] = df_orders.loc[df_orders.ONo.isin(df_orderpos.ONo.values),"Enabled"]
     df_orderpos=df_orderpos[df_orderpos.Start.isna()]
     df = pd.DataFrame()
     df['Number']=1
