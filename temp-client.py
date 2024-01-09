@@ -11,10 +11,32 @@ from DTPPC.implementation.local.dbConnect import DBReader
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
+
+''' for compatibility with WIN7'''
+async def run_tasks(db_file,planned_orders_file,running_orders_file):
+
+    async def restart(task):
+        await task()
+    
+    tasks = [
+        dbc.run_async(timeout=5),  # convert MES accdb to xlsx
+        create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
+        ec.run_async(5),  # read events
+        trigger.run_async(5)  # trigger events
+    ]
+
+    while True:
+        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+
+        for completed_task in done:
+            tasks.remove(completed_task)
+            new_task = restart(completed_task)
+            tasks.append(new_task)
+
 if __name__ == '__main__':
 
     db_file = 'MESdata.xlsx'
-    db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
+    #db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
     running_orders_file = os.getcwd()+'\WorkInProcess.xlsx'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
@@ -38,13 +60,13 @@ if __name__ == '__main__':
     ctrl.actuator = act
     
     #debug
-    ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
+    '''ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
     ctrl.init_dv()
-    asyncio.run(ctrl.BottleneckPrediction.solve())
+    asyncio.run(ctrl.BottleneckPrediction.solve())'''
 
 
-    # running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
-    # running_orders_path += "\\"
+    running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
+    running_orders_path += "\\"
     # asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
     # asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
     # asyncio.run(upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5)) # upload files to Azure cloud
@@ -52,28 +74,8 @@ if __name__ == '__main__':
     # asyncio.run(t.run_async(5)) # trigger events
     print('finished')
 
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file))
 
 
-''' for compatibility with WIN7'''
-async def run_tasks():
 
-    async def restart(task):
-        await task()
-    
-    tasks = [
-        dbc.run_async(timeout=5),  # convert MES accdb to xlsx
-        create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
-        ec.run_async(5),  # read events
-        trigger.run_async(5)  # trigger events
-    ]
-
-    while True:
-        done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
-
-        for completed_task in done:
-            tasks.remove(completed_task)
-            new_task = restart(completed_task)
-            tasks.append(new_task)
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run_tasks())
