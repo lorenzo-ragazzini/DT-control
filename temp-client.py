@@ -37,7 +37,7 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
         print(' ')
         for task in done:
             tasks.remove(task)
-            new_task = asyncio.create_task(task._coro)
+            new_task = asyncio.create_task(restart(task._coro))
             tasks.append(new_task)
 
 if __name__ == '__main__':
