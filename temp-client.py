@@ -1,7 +1,7 @@
 import os
 import requests
 import asyncio
-from DTPPC.implementation.cloud.cloud import upload
+from DTPPC.implementation.cloud.cloud import upload as cloud_upload
 from DTPPC.implementation.controller.trigger import Trigger
 from DTPPC.implementation.flask.front import DTInterface
 from DTPPC.implementation.controller.controller import create_controller, SmartController, ExecuteSchedule, ReleaseOne, GenerateSchedule, SetWIP, ControlMap, Rule1, Rule2, Rule3, Rule4
@@ -18,7 +18,8 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
             dbc.run_async(timeout=5),  # convert MES accdb to xlsx
             create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files
             ec.run_async(5),  # read events
-            trigger.run_async(5)  # trigger events
+            trigger.run_async(5),  # trigger events
+            cloud_upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5) # upload files to Azure cloud
         ]
         return coroutines
     tasks = [asyncio.create_task(coro) for coro in get_coroutines()]
@@ -34,6 +35,8 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file):
 		
 if __name__ == '__main__':
     debug = False
+    mode = "WIN7"
+    
     db_file = 'MESdata.xlsx'
     if debug == True:
         db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx" #debug
@@ -61,15 +64,17 @@ if __name__ == '__main__':
 
     running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     running_orders_path += "\\"
-    # asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
-    # asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
-    # asyncio.run(upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5)) # upload files to Azure cloud
-    # asyncio.run(ec.run_async(5)) # read events
-    # asyncio.run(t.run_async(5)) # trigger events
+
+    if mode == "WIN7":
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file))
+    else:
+        asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
+        asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files
+        asyncio.run(cloud_upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5)) # upload files to Azure cloud
+        asyncio.run(ec.run_async(5)) # read events
+        asyncio.run(trigger.run_async(5)) # trigger events    
+
     print('finished')
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file))
-
 
 
