@@ -7,12 +7,17 @@ import pandas as pd
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 class Actuator(DBConnection):
-    def __init__(self):
+    def __init__(self,debug=False):
         super().__init__()
+        self._debug = debug
     def act(self,dvs:dict) -> None:
         if "sequence" in dvs.keys():
+            if self._debug:
+                print("Updating sequence")
             self.sort(dvs["sequence"])
         if "admission" in dvs.keys():
+            if self._debug:
+                print("Updating admission")
             self.release(dvs["admission"])
     def new_dict(self,dv:dict)->dict:
         new_dv = dict()
@@ -59,6 +64,7 @@ class Actuator(DBConnection):
         self.cur.execute(query)
         print(self.cur.fetchall())
         self.disconnect()
+    '''
     def old_sort(self, dv) -> None:
         self.connect()
         df = self.process()['tblOrderPos']
@@ -97,9 +103,11 @@ class Actuator(DBConnection):
         df = pd.concat([df_active,df_inactive],ignore_index=True)
         self.write(df,"tblOrder")
         self.disconnect()
+    '''
     def write(self,df:pd.DataFrame,table_name:str):
         df.to_sql(table_name, self.conn, if_exists='replace', index=False)
 
+'''
 if __name__ == '__main__':
     class Actuator(Actuator):
         def connect(self):
@@ -108,3 +116,4 @@ if __name__ == '__main__':
     a = Actuator()
     a.connect()
     a.release("")
+'''

@@ -13,6 +13,7 @@ class OperationalController:
     modules:Iterable[ControlModule] = list()
     decisionVariables:DecisionVariables = DecisionVariables()
     systemModel = {}
+    _debug = False
     def addPolicy(self,Cp:Type[ControlPolicy]):
         self.policies.append(Cp(self))
     def addModule(self,Cm:Type[ControlModule]):
@@ -26,15 +27,21 @@ class OperationalController:
             rule._controller = self
             rule._map = self.map
     def send(self,event):
+        if self._debug == True:
+            print("Controller received event: %s" % event)
         policies:Iterable[Type[Union[ControlPolicy,ControlModule]]] = self.map(event)
         for cp in policies:
             self.execute(self[cp])
     def execute(self,c:ControlPolicy) -> Union[None,DecisionVariables]:
+        if self._debug == True:
+            print('Executing %s' % c)
         pars = c.getInputParamters()
         input = self.search(pars)
         if issubclass(type(c),ControlPolicy):
             dv = c(input=input)
             if dv is not None:
+                if self._debug == True:
+                    print("Updating decision variable: %s" % dv)
                 self.decisionVariables.update(dv)
                 self.saveDecisionVariables()
             return dv
