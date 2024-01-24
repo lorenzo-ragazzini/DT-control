@@ -13,7 +13,8 @@ class DTInterface:
         if self._debug:
             print("Sending request to DT: %s" % request)
         headers = {'Content-Type': 'application/json'}
-        controlUpdate['ExecuteSchedule']['sequence'] = [controlUpdate['ExecuteSchedule']['sequence'][key] for key in taskResourceInformation['Order'].values()]
+        if type(controlUpdate['ExecuteSchedule']['sequence']) is dict:
+            controlUpdate['ExecuteSchedule']['sequence'] = [controlUpdate['ExecuteSchedule']['sequence'][key] for key in taskResourceInformation['Order'].values()]
         inputs = json.dumps({"name":name, "taskResourceInformation":taskResourceInformation, "controlUpdate":controlUpdate, "request":request})
         res = requests.post(self.url+'/run', json=inputs, headers=headers)
         # res = requests.get(self.url+'/run',json=inputs,headers=headers) # inutile, ottieni lo stesso risultato
