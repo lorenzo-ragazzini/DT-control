@@ -17,7 +17,7 @@ class GenerateSchedule(ControlPolicy):
     inputParameters = ['orders']
     def fitness_function(self,sequence,taskResourceInformation,DTname):
         taskResourceInformation = taskResourceInformation.to_dict()
-        ctrlUpdate = {"executeSchedule":{"sequence":(sequence+1).tolist()}}
+        ctrlUpdate = {"ExecuteSchedule":{"sequence":(sequence+1).tolist()}}
         req = SimulationRequest()
         req['output'] = ['Cmax']
         res = self._controller.dt.interface(DTname,taskResourceInformation,ctrlUpdate,req)

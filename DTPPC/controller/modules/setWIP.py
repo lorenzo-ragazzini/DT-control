@@ -12,7 +12,7 @@ class SetWIP(ControlModule):
             sleep(self.timeout)
             r = list()
             for WIPlevel in range(1,10):
-                ctrlUpdate = {"executeSchedule":{"sequence":self._controller.decisionVariables['sequence']}}
+                ctrlUpdate = {"ExecuteSchedule":{"sequence":self._controller.decisionVariables['sequence']}}
                 req = SimulationRequest()
                 res = self._controller.dt.interface(None,ctrlUpdate,req)
                 r.append([WIPlevel,res['TH'],res["st"]])
