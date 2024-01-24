@@ -17,6 +17,6 @@ class BottleneckPrediction(ControlModule):
             req['output'] = ['U']
             res = self._controller.dt.interface(DTname,taskResourceInformation,ctrlUpdate,req)
             w_dict = dict((key,value['Working']) for key,value in zip(res["U"].keys(), res["U"].values()))
-            print(['Bottleneck station is ',max(w_dict, key=w_dict.get),' --> U=',w_dict[max(w_dict, key=w_dict.get)],'%'])
+            print(['Bottleneck predicted at station: ',max(w_dict, key=w_dict.get),' --> U=',w_dict[max(w_dict, key=w_dict.get)],'%'])
             self._controller.dt.clear(DTname)
             sleep(self.timeout)
