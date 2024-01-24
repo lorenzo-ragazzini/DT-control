@@ -154,6 +154,8 @@ def _clean_win32com():
     print(path)
 
 if __name__ == '__main__':
+    _clean_win32com()
+    raise SystemExit
     dt = DigitalTwin()
     dt.start()
     dt.stop()
