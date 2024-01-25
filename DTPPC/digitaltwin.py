@@ -134,6 +134,8 @@ class DigitalTwin(DigitalTwin):
     def _clear_instance(self,name:str):
         dt = self.instances.pop(name)
         if dt.model_path != self.model_path: 
+            dt.plantsim.quit()
+            time.sleep(1)
             #it is not base instance, delete files
             shutil.rmtree(dt.model_path.rsplit('/',1)[0])
         else: 
