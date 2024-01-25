@@ -37,7 +37,10 @@ def running_orders(input_file:str,output_file:str=''):
     tblStep_dataframe['Start'] = np.where(tblStep_dataframe['Start'].notna(), 1, 0)
     tblStep_dataframe = tblStep_dataframe[['WPNo','ONo','OpNo','ResourceID','Start']]
     if output_file != '':
-        tblStep_dataframe.to_excel(output_file, index=False)
+        if output_file.rsplit('.',1)[-1] == 'xlsx':
+            tblStep_dataframe.to_excel(output_file, index=False)
+        elif output_file.rsplit('.',1)[-1] in ['txt','csv']:
+            tblStep_dataframe.to_csv(output_file, sep='\t', index=False)
     return tblStep_dataframe
 
 if __name__ == '__main__':
