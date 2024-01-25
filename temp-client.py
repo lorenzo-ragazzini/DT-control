@@ -34,14 +34,14 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
 
 		
 if __name__ == '__main__':
-    debug:bool = False
+    debug:bool = True
     mode:str = "WIN7"
     
     db_file = 'MESdata.xlsx'
     if debug == True:
         db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx"
     
-    running_orders_file = getcwd()+'\WorkInProcess.xlsx'
+    running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
     address="127.0.0.1:5000" 
@@ -62,6 +62,7 @@ if __name__ == '__main__':
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
         ctrl.init_dv()
         asyncio.run(ctrl.BottleneckPrediction.solve())
+        # asyncio.run(ctrl.send("start"))
 
     running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     running_orders_path += "\\"
