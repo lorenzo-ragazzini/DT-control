@@ -47,23 +47,27 @@ class DigitalTwin():
             df = planned_orders()
         else:
             df = pd.DataFrame(taskResourceInformation)
-            df.to_excel(fr"{self.input_path}\Order_Table.xlsx", index=False)
+            # df.to_excel(fr"{self.input_path}\Order_Table.xlsx", index=False)
+            df.to_csv(fr"{self.input_path}\Order_Table.txt", sep='\t', index=False)
     def update(self,controlUpdate:dict):
         try:
             sequence = controlUpdate['ExecuteSchedule']['sequence']
-            pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=True)
+            # pd.Series(sequence).to_excel(fr"{self.input_path}\Sequence.xlsx",index=False,header=True)
+            pd.Series(sequence).to_csv(fr"{self.input_path}\Sequence.txt", sep='\t', index=False)
         except:
             pass
         try:
             CONWIP_value = controlUpdate['ReleaseOne']['CONWIP_value']
-            pd.Series(CONWIP_value).to_excel(fr"{self.input_path}\ConwipValue.xlsx",index=False,header=False)
+            # pd.Series(CONWIP_value).to_excel(fr"{self.input_path}\ConwipValue.xlsx",index=False,header=False)
+            pd.Series(sequence).to_csv(fr"{self.input_path}\ConwipValue.txt", sep='\t', index=False)
         except:
             pass
     def simulate(self,request,write=False):
         # configuration=pd.DataFrame()
         # configuration['simLength'] = request['simLength']
         configuration=pd.DataFrame(request['input'],index=[0])
-        configuration.to_excel(fr"{self.input_path}\Configuration.xlsx", index=False)
+        # configuration.to_excel(fr"{self.input_path}\Configuration.xlsx", index=False)
+        configuration.to_csv(fr"{self.input_path}\Configuration.txt", sep='\t', index=False)
         results = dict()
         for ii in range(request['nrOfSimul']):
             self.plantsim_run()
