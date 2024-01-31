@@ -19,6 +19,7 @@ class EventCreator:
         new = pd.read_excel(self.input_file,sheet_name='tblOrderPos') 
         if self.old is None:
             self.old = new.copy(deep=True)
+            e.append('startUnscheduled')
             e.append('start')
             return e
         if len(new) != len(self.old):
