@@ -70,10 +70,10 @@ class Rule5(ControlRule):
     
 def create_controller() -> SmartController:
     ctrl = SmartController()
-    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule(), BottleneckPrediction()]
+    ctrl.policies = [ExecuteSchedule(), ReleaseOne(WIPlimit=5), GenerateSchedule(), SetWIP(), FIFODispatchingRule(), BottleneckPrediction(), SetObjective()]
     ctrl.linkPolicies()
     ctrl.map = ControlMap()
-    ctrl.map.rules = [Rule1(), Rule2(), Rule3(), Rule4(), Rule5()]
+    ctrl.map.rules = [Rule1(), Rule2bis(), Rule3(), Rule4(), Rule5()]
     ctrl.linkRules()
     return ctrl
 
