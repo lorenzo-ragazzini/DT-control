@@ -11,6 +11,9 @@ from DTPPC.implementation.local.dbConnect import DBReader
 from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
+import warnings 
+warnings.filterwarnings('ignore') 
+
 async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orders_path,cloud_file_path):
     ''' For compatibility with Windows 7'''
     def get_coroutines():

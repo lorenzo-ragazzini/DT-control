@@ -40,7 +40,7 @@ class EventCreator:
         events = self.events()
         for event in events:
             print(pd.Timestamp.now(),event)
-            self.log.append([pd.Timestamp.now(),event])
+            self.log.append([str(pd.Timestamp.now()),event])
         if self.output_file is not None:
             with open(self.output_file,'w') as f:
                 json.dump(self.log,f)
