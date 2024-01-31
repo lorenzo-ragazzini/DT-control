@@ -17,7 +17,7 @@ class DigitalTwin():
             self.model_path = paths['model_path']
             self.output_path = paths['output_path']
             self.input_path = paths['input_path']
-        self.output_filenames = ["FinishTimes.xlsx","TotEnergyConsumption.xlsx","Util.xlsx"]      
+        self.output_filenames = ["FinishTimes.csv","TotEnergyConsumption.csv","Util.csv"]      
     def start(self):
         self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
@@ -85,9 +85,9 @@ class DigitalTwin():
         self.update(controlUpdate)
         return self.simulate(request)
     def output_analysis(self,request)->dict:
-        df = pd.read_excel(fr"{self.output_path}\FinishTimes.xlsx")
-        df2 = pd.read_excel(fr"{self.output_path}\TotEnergyConsumption.xlsx")
-        df3 = pd.read_excel(fr"{self.output_path}\Util.xlsx")
+        df = pd.read_csv(fr"{self.output_path}\FinishTimes.csv",sep='\t')
+        df2 = pd.read_csv(fr"{self.output_path}\TotEnergyConsumption.csv",sep='\t')
+        df3 = pd.read_csv(fr"{self.output_path}\Util.csv",sep='\t')
         df3 = df3.rename(columns={df3.columns[0]:'State'}).set_index('State')
         data = dict()
         if 'th' in request['output']:
