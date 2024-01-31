@@ -86,21 +86,28 @@ class DigitalTwin():
         return self.simulate(request)
     def output_analysis(self,request)->dict:
         df = pd.read_csv(fr"{self.output_path}\FinishTimes.csv",sep='\t')
+        df.dropna(inplace=True)
+        for col in ['ExitTime','EntryTime','CycleTime']:
+            df[col] = df[col].apply(lambda x: "00:"+x if len(x.split(":"))==2 else ("00:00:"+x if len(x.split(":"))==1 else x))
+        df["ExitTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
+        df["EntryTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
+        df["CycleTime"] = pd.to_timedelta(df["CycleTime"])
         df2 = pd.read_csv(fr"{self.output_path}\TotEnergyConsumption.csv",sep='\t')
         df3 = pd.read_csv(fr"{self.output_path}\Util.csv",sep='\t')
         df3 = df3.rename(columns={df3.columns[0]:'State'}).set_index('State')
         data = dict()
         if 'th' in request['output']:
-            data["average_TH"] = 1/df["ExitTime"].diff().mean()
+            data["average_TH"] = 1/df["ExitTime"].diff().mean().total_seconds()
         if 'st' in request['output']:
             # Seleziona la quarta colonna (colonna dei cycle time)
-            system_time = df["CycleTime"]
-            data["average_system_time"] = system_time[system_time >= 0].mean()
+            # system_time = df["CycleTime"]
+            # data["average_system_time"] = system_time[system_time >= 0].mean()
+            data["average_system_time"] = df["CycleTime"].mean().total_seconds()
         if 'energy' in request['output']:
             # Calcola il consumo energetico totale
             data["total_energy_consumption"] = np.sum(df2.iloc[-1,1:].astype(float))
         if 'Cmax' in request['output'] or 'makespan' in request['output']:
-            data["Cmax"] = df['ExitTime'].max()
+            data["Cmax"] = df['ExitTime'].max().total_seconds()
         if "U" in request['output']:
             data["U"] = df3.to_dict()
         return data
