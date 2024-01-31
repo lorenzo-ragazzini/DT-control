@@ -7,9 +7,9 @@ __pycache__/
 *.so
 
 # Service files
-.xlsx
-.csv
-.json
+*.xlsx
+*.csv
+*.json
 
 # Distribution / packaging
 .Python
