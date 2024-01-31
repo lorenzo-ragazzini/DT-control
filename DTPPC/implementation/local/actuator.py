@@ -7,7 +7,7 @@ import pandas as pd
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 class Actuator(DBConnection):
-    def __init__(self,debug=False):
+    def __init__(self,debug=True):
         super().__init__()
         self._debug = debug
     def act(self,dvs:dict) -> None:
