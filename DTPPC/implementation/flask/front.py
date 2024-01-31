@@ -2,7 +2,10 @@ import requests
 import json
 class DTInterface:
     def __init__(self,url,debug=False):
-        self.url = "http://" + url
+        if "http" not in url:
+            self.url = "https://" + url
+        else:
+            self.url = url
         self._debug = debug
     def new(self) -> str:
         return requests.get(self.url+'/new').content.decode()

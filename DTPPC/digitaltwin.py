@@ -89,8 +89,10 @@ class DigitalTwin():
         df.dropna(inplace=True)
         for col in ['ExitTime','EntryTime','CycleTime']:
             df[col] = df[col].apply(lambda x: "00:"+x if len(x.split(":"))==2 else ("00:00:"+x if len(x.split(":"))==1 else x))
-        df["ExitTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
-        df["EntryTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
+        # df["ExitTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
+        # df["EntryTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
+        df["ExitTime"] = pd.to_timedelta(df["ExitTime"])
+        df["EntryTime"] = pd.to_timedelta(df["EntryTime"])
         df["CycleTime"] = pd.to_timedelta(df["CycleTime"])
         df2 = pd.read_csv(fr"{self.output_path}\TotEnergyConsumption.csv",sep='\t')
         df3 = pd.read_csv(fr"{self.output_path}\Util.csv",sep='\t')
