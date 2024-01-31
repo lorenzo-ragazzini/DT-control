@@ -1,3 +1,1 @@
-﻿WPNo	ONo	OpNo	ResourceID	Start	Product
-1212	6524-1	302	5	1
-1212	6525-1	402	6	0
+WPNo	ONo	OpNo	ResourceID	Start
