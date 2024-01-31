@@ -13,7 +13,7 @@ class OperationalController:
     modules:Iterable[ControlModule] = list()
     decisionVariables:DecisionVariables = DecisionVariables()
     systemModel = {}
-    _debug = False
+    _debug = True
     def addPolicy(self,Cp:Type[ControlPolicy]):
         self.policies.append(Cp(self))
     def addModule(self,Cm:Type[ControlModule]):
@@ -34,7 +34,7 @@ class OperationalController:
             self.execute(self[cp])
     def execute(self,c:ControlPolicy) -> Union[None,DecisionVariables]:
         if self._debug == True:
-            print('Executing %s' % c)
+            print('Executing %s' % c.__class__.__name__)
         pars = c.getInputParamters()
         input = self.search(pars)
         if issubclass(type(c),ControlPolicy):

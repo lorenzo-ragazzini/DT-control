@@ -26,10 +26,10 @@ class SmartController(SmartController):
         print(event)
         super().send(event)
     def execute(self, c: ControlPolicy):
-        print(type(c))
+        print(type(c).__name__)
         dv = super().execute(c)
         print(dv)
-        if self.actuator:
+        if self.actuator and dv:
             self.actuator.act(dv)
 
 class Rule1(ControlRule):

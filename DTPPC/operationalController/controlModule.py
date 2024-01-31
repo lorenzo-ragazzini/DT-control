@@ -10,7 +10,7 @@ class ControlModule:
     def __call__(self,*args,**kwargs):
         return self.run(*args,**kwargs)
     @abstractmethod
-    def run(self,*args,**kwargs) -> Iterable:
+    def solve(self,*args,**kwargs) -> Iterable:
         return []
     def getInputParamters(self):
         return self.inputParameters

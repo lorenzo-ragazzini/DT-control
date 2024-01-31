@@ -30,7 +30,10 @@ class DigitalTwin():
         if not hasattr(self,'plantsim'):
             self.start()
         for file in os.listdir(self.output_path):
-            os.remove(self.output_path+'/'+file)
+            try:
+                os.remove(self.output_path+'/'+file)
+            except:
+                pass
         self.plantsim.reset_simulation()
         # multi-instance
         path = self.model_path.rsplit('/',1)[0] +'/'
