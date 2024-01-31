@@ -10,6 +10,7 @@ class SetWIP(ControlModule):
     def __init__(self,timeout=600) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
+        sleep(120) #initial timeout
         while True:
             r = list()
             DTname = self._controller.dt.new()

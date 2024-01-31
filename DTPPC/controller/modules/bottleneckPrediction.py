@@ -6,9 +6,10 @@ from DTPPC.controller.misc import SimulationRequest
 from DTPPC.controller.misc import genControlUpdate
 
 class BottleneckPrediction(ControlModule):
-    def __init__(self,timeout=120) -> None:
+    def __init__(self,timeout=180) -> None:
         self.timeout = timeout
     def solve(self):
+        sleep(120) # initial delay
         while True:
             DTname = self._controller.dt.new()
             taskResourceInformation = self._controller.systemModel['orders'].to_dict()
