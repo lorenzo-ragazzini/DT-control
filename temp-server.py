@@ -19,4 +19,5 @@ if __name__ == "__main__":
     # webbrowser.open()
     serve(app, host='127.0.0.1', port=5000, expose_tracebacks=True)
 
-    
+# the address is available at:
+# https://dashboard.ngrok.com/cloud-edge/endpoints
