@@ -49,7 +49,7 @@ class Rule2bis(ControlRule):
         self.run_delayed()
         return []
     def run_delayed(self):
-        time.sleep(2)
+        time.sleep(4)
         asyncio.run(self._controller.send_async('new'))
     
 class Rule3(ControlRule):
