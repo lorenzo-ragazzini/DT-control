@@ -10,6 +10,7 @@ class Actuator(DBConnection):
     def __init__(self,debug=False):
         super().__init__()
         self._debug = debug
+        self.connect()
     def act(self,dvs:dict) -> None:
         if "sequence" in dvs.keys():
             if self._debug:
