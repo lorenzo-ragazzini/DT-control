@@ -5,7 +5,7 @@ from time import sleep
 import asyncio
 
 class EventCreator:
-    def __init__(self,input_file:str,output_file:str=''):
+    def __init__(self,input_file:str,output_file:str='log.json'):
         self.old = None
         self.output_file = output_file
         self.log = list()
