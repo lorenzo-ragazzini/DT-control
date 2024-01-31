@@ -46,6 +46,7 @@ class Rule2(ControlRule):
 class Rule2bis(ControlRule):
     trigger = 'completion'
     def run(self,event):
+        self._controller.systemModel['WIP'] -= 1
         self.run_delayed()
         return []
     def run_delayed(self):
