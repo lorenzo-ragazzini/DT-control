@@ -64,8 +64,8 @@ if __name__ == '__main__':
     if debug == True:
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
         ctrl.init_dv()
-        asyncio.run(ctrl.SetWIP.solve())
-        # asyncio.run(ctrl.send("start"))
+        # asyncio.run(ctrl.SetWIP.solve())
+        asyncio.run(ctrl.send("startUnscheduled"))
 
     running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     running_orders_path += "\\"
