@@ -28,7 +28,6 @@ class SetWIP(ControlModule):
             self._controller.dt.clear(DTname)
             sleep(self.timeout)
 
-
 def plot(df):
     import matplotlib.pyplot as plt
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -42,6 +41,8 @@ def plot(df):
     ax2.tick_params('y', colors='r')
     fig.legend(loc='upper left', bbox_to_anchor=(0.15, 0.85))
     plt.title('TH and LT as functions of WIP')
-    plt.show()
+    plt.show(block=False)  # Display the plot without blocking
+    plt.pause(5)  # Pause for 5 seconds
+    plt.close()  # Close the plot window after 5 seconds
 
     
