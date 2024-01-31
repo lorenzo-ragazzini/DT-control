@@ -17,7 +17,7 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
         coroutines = [
             dbc.run_async(timeout=5),  # convert MES accdb to xlsx
             create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=5, ctrl=ctrl),  # create input files & transfers the order to the controller
-            ec.run_async(5),  # read events
+            eventCreator.run_async(5),  # read events
             trigger.run_async(5),  # trigger events
             cloud_upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5) # upload files to Azure cloud
         ]
@@ -34,7 +34,7 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
 
 		
 if __name__ == '__main__':
-    debug:bool = True
+    debug:bool = False
     mode:str = "WIN7"
     
     db_file = 'MESdata.xlsx'
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     dt = DTInterface(address) # interface with the DT
     dbc = DBReader(output_file=db_file) # read the ACCDB defined in DBReader class, write db_file
-    ec = EventCreator(db_file,output_file='log.json') # create log.json file listening to events
+    eventCreator = EventCreator(db_file,output_file='log.json') # create log.json file listening to events
     trigger = Trigger(db_file) # trigger > self.controller
    
     ctrl = create_controller() # get preset controller
@@ -74,5 +74,5 @@ if __name__ == '__main__':
         asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
         asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files & transfers the order to the controller
         asyncio.run(cloud_upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5)) # upload files to Azure cloud
-        asyncio.run(ec.run_async(5)) # read events
+        asyncio.run(eventCreator.run_async(5)) # read events
         asyncio.run(trigger.run_async(5)) # trigger events

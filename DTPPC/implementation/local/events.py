@@ -13,7 +13,7 @@ class EventCreator:
         '''
         with open('config.json') as f:
             self.input_path = json.load(f)['input_path']
-        '''      
+        '''
     def events(self)->List[str]:
         e = []
         new = pd.read_excel(self.input_file,sheet_name='tblOrderPos') 
