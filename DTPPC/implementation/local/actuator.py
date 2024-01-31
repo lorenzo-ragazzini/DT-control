@@ -10,8 +10,8 @@ class Actuator(DBConnection):
     def __init__(self,debug=False):
         super().__init__()
         self._debug = debug
-        self.connect()
     def act(self,dvs:dict) -> None:
+        self.connect()
         if "sequence" in dvs.keys():
             if self._debug:
                 print("Updating sequence")
@@ -20,6 +20,7 @@ class Actuator(DBConnection):
             if self._debug:
                 print("Updating admission")
             self.release(dvs["admission"])
+        self.disconnect()
     def new_dict(self,dv:dict)->dict:
         new_dv = dict()
         for key, value in dv.items():
@@ -46,7 +47,6 @@ class Actuator(DBConnection):
         query = f"SELECT PlanedStart FROM tblOrderPos"
         self.cur.execute(query)
         print(self.cur.fetchall())
-        self.disconnect()
     def release(self,dv):
         # dv = {"6629-1":True,"6630-1":True}
         dv = self.new_dict(dv)
@@ -64,7 +64,6 @@ class Actuator(DBConnection):
         query = f"SELECT Enabled FROM tblOrder"
         self.cur.execute(query)
         print(self.cur.fetchall())
-        self.disconnect()
     '''
     def old_sort(self, dv) -> None:
         self.connect()

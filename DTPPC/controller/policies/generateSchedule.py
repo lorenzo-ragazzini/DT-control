@@ -48,7 +48,7 @@ class GenerateSchedule(ControlPolicy):
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)
         res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"])
-        sequence = dict(zip(taskResourceInformation['orders'], res.X.tolist()))
+        sequence = dict(zip(taskResourceInformation['Order'], res.X.tolist()))
         return {"sequence":sequence}
     
 if __name__ == '__main__':

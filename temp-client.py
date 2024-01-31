@@ -47,8 +47,8 @@ if __name__ == '__main__':
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
-    if debug:
-        address="127.0.0.1:5000"
+    if not debug:
+        address="http://127.0.0.1:5000"
     else:
         address="https://fe3b-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
 
