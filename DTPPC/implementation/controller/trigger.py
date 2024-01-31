@@ -14,4 +14,4 @@ class Trigger(EventCreator):
         for event in events:
             print(pd.Timestamp.now(),event)
             # asyncio.run(self.controller.send_async(event))
-            asyncio.create_task(self.controller.send(event))
+            asyncio.create_task(self.controller.send_async(event))
