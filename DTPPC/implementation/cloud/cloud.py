@@ -34,4 +34,5 @@ async def upload(filename,local_file_path,cloud_file_path,timeout):
     s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
     while True:
         s.upload()
+        print("Uploaded %s to %s on Azure Cloud Storage" %(filename,cloud_file_path))
         await asyncio.sleep(timeout)

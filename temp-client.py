@@ -27,6 +27,8 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
         return coroutines
     tasks = [asyncio.create_task(coro) for coro in get_coroutines()]
     
+    await asyncio.gather(*get_coroutines())
+
     while True:
         done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
         for task in done:
