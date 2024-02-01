@@ -26,7 +26,7 @@ class SmartController(SmartController):
         super().send(event)
     def execute(self, c: ControlPolicy):
         import threading
-        threading.Thread(target=self.execute2,args=(c,)).start()
+        threading.Thread(target=self.execute_thread,args=(c,)).start()
     def execute_thread(self, c: ControlPolicy):
         print(type(c).__name__)
         dv = super().execute(c)

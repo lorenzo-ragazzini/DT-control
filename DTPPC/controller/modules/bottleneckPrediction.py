@@ -8,7 +8,7 @@ from DTPPC.controller.misc import genControlUpdate
 class BottleneckPrediction(ControlModule):
     def __init__(self,timeout=60) -> None:
         self.timeout = timeout
-    def solve(self):
+    def solve(self,**kwargs):
         sleep(60) # initial delay
         while True:
             DTname = self._controller.dt.new()
