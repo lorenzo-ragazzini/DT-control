@@ -11,7 +11,7 @@ class SetWIP(ControlModule):
     def __init__(self,timeout=600) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
-        sleep(120) #initial timeout
+        sleep(10) #initial timeout
         while True:
             input = self._controller.search(self.inputParameters)
             taskResourceInformation = input['orders'].to_dict()

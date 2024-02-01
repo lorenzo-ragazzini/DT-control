@@ -35,12 +35,15 @@ class DBReader(DBConnection):
 			pass
 	async def run_async(self,timeout):
 		print("Connecting to ACCDB...")
+		flag = False
 		try:
 			while True:
 				self.connect()
 				dfs = self.process()
 				self.save(dfs)
-				print("Connection to ACCDB succeded!")
+				if not flag:
+					flag = True
+					print("Connection to ACCDB succeded!")
 				self.disconnect()
 				await asyncio.sleep(timeout)
 		except: #disconnect in case of error
