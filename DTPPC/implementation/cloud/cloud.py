@@ -1,5 +1,6 @@
 from DTPPC.implementation.azure.communication.sharefile import ShareFileOnly
 import asyncio
+from time import sleep
 from azure.core.exceptions import ResourceNotFoundError
 
 async def downloader(s:ShareFileOnly, timeout):
@@ -36,3 +37,13 @@ async def upload(filename,local_file_path,cloud_file_path,timeout):
         s.upload()
         print("Uploaded %s to %s on Azure Cloud Storage" %(filename,cloud_file_path))
         await asyncio.sleep(timeout)
+
+def upload(filename,local_file_path,cloud_file_path,timeout):
+    flag = False
+    s = ShareFileOnly(filename,local_file_path,cloud_file_path,share_name='all-input')
+    while True:
+        s.upload()
+        if not flag:
+            flag = True
+            print("Uploading %s to %s on Azure Cloud Storage: OK" %(filename,cloud_file_path))
+        sleep(timeout)

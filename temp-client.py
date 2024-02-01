@@ -1,6 +1,8 @@
 from os import getcwd
+from multiprocessing import Process
 import requests
 import asyncio
+import time
 from DTPPC.implementation.cloud.cloud import upload as cloud_upload
 from DTPPC.implementation.controller.trigger import Trigger
 from DTPPC.implementation.flask.front import DTInterface
@@ -65,7 +67,7 @@ if __name__ == '__main__':
     ctrl.dt = dt
     trigger.controller = ctrl
     ctrl.actuator = act
-    
+
     if debug == True:
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
         ctrl.init_dv()
@@ -76,8 +78,16 @@ if __name__ == '__main__':
     running_orders_path += "\\"
 
     if mode == "WIN7":
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file,running_orders_path,cloud_file_path))
+        p = list()
+        p.append(Process(target=dbc.run,kwargs={'timeout': 5}))  # convert MES accdb to xlsx
+        p.append(Process(target=create_files, kwargs={'input_file':db_file, 'output_file_po':planned_orders_file, 'output_file_ro':running_orders_file, 'timeout':5, 'ctrl':ctrl}))  # create input files & transfers the order to the controller
+        p.append(Process(target=eventCreator.run,args=(5,)))  # read events
+        p.append(Process(target=trigger.run,args=(5,)))  # trigger events
+        p.append(Process(target=cloud_upload,args=(running_orders_filename,running_orders_path,cloud_file_path,), kwargs={'timeout':5})) # upload files to Azure cloud
+        [(pr.start(),time.sleep(1)) for pr in p]
+        [pr.join() for pr in p]
+        # loop = asyncio.get_event_loop()
+        # loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file,running_orders_path,cloud_file_path))
     else:
         asyncio.run(dbc.run_async(timeout=5)) # convert MES accdb to xlsx
         asyncio.run(create_files(input_file=db_file,output_file_po=planned_orders_file,output_file_ro=running_orders_file,timeout=5,ctrl=ctrl)) # create input files & transfers the order to the controller

@@ -3,6 +3,8 @@ import asyncio
 import pandas as pd
 from DTPPC.implementation.controller.controller import SmartController
 from DTPPC.implementation.local.events import EventCreator
+from multiprocessing import Process
+from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 
 class Trigger(EventCreator):
@@ -14,4 +16,7 @@ class Trigger(EventCreator):
         for event in events:
             print(pd.Timestamp.now(),event)
             # asyncio.run(self.controller.send_async(event))
-            asyncio.create_task(self.controller.send_async(event))
+            self.controller.systemModel['orders'] = planned_orders_simplified('MESdata.xlsx')
+            p=Process(target=self.controller.send,args=(event,))
+            p.start()
+            p.join()

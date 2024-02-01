@@ -20,27 +20,32 @@ class DBReader(DBConnection):
 		self.path_to_file = output_file
 		super().__init__()
 	def run(self,timeout):
+		print("Connecting to ACCDB...")
+		flag = False
 		try:
 			while True:
 				self.connect()
 				dfs = self.process()
 				self.save(dfs)
+				if not flag:
+					flag = True
+					print("Connection to ACCDB succeded!")
 				self.disconnect()
 				sleep(timeout)
-		except Exception: #disconnect in case of error
-			print(Exception)
-		try:
+		except: #disconnect in case of error
+			print("Failed to connect")
 			self.disconnect()
-		except:
-			pass
 	async def run_async(self,timeout):
 		print("Connecting to ACCDB...")
+		flag = False
 		try:
 			while True:
 				self.connect()
 				dfs = self.process()
 				self.save(dfs)
-				print("Connection to ACCDB succeded!")
+				if not flag:
+					flag = True
+					print("Connection to ACCDB succeded!")
 				self.disconnect()
 				await asyncio.sleep(timeout)
 		except: #disconnect in case of error
