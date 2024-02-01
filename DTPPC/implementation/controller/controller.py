@@ -23,7 +23,6 @@ class SmartController(SmartController):
     def n_orders(self):
         return len(self.systemModel['orders'])
     async def send_async(self,event):
-        print(event)
         super().send(event)
     def execute(self, c: ControlPolicy):
         print(type(c).__name__)
