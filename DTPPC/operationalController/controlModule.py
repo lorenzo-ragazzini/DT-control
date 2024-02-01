@@ -8,7 +8,7 @@ class ControlModule:
     inputParameters:List[str] = list()
     _controller = None
     def __call__(self,*args,**kwargs):
-        return self.run(*args,**kwargs)
+        return self.solve(*args,**kwargs)
     @abstractmethod
     def solve(self,*args,**kwargs) -> Iterable:
         return []

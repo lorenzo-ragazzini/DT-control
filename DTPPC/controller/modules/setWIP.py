@@ -7,14 +7,17 @@ import pandas as pd
 import numpy as np
 
 class SetWIP(ControlModule):
+    inputParameters = ['orders']
     def __init__(self,timeout=600) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
         sleep(120) #initial timeout
         while True:
+            input = self._controller.search(self.inputParameters)
+            taskResourceInformation = input['orders'].to_dict()
             r = list()
             DTname = self._controller.dt.new()
-            taskResourceInformation = self._controller.systemModel['orders'].to_dict()
+            # taskResourceInformation = self._controller.systemModel['orders'].to_dict()
             ctrlUpdate = genControlUpdate(self._controller)
             for WIPlevel in range(1,10):
                 ctrlUpdate['ReleaseOne']['CONWIP_value'] = WIPlevel
@@ -25,7 +28,7 @@ class SetWIP(ControlModule):
             r = pd.DataFrame(r,columns=["WIP","TH","LT"]).set_index(['WIP'])
             plot(r)
             WIPlevel = np.random.randint(4,7)
-            print("Target WIP is set to %f" %WIPlevel)
+            print("Target WIP is set to %d" %WIPlevel)
             self._controller.dt.clear(DTname)
             sleep(self.timeout)
 
