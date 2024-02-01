@@ -25,6 +25,9 @@ class SmartController(SmartController):
     async def send_async(self,event):
         super().send(event)
     def execute(self, c: ControlPolicy):
+        import threading
+        threading.Thread(target=self.execute2,args=(c,)).start()
+    def execute_thread(self, c: ControlPolicy):
         print(type(c).__name__)
         dv = super().execute(c)
         print(dv)
@@ -55,7 +58,7 @@ class Rule2bis(ControlRule):
 class Rule3(ControlRule):
     trigger = 'start'
     def run(self,event):
-        return [GenerateSchedule,SetWIP,SetObjective,BottleneckPrediction]    
+        return [GenerateSchedule,SetObjective,BottleneckPrediction,SetWIP]    
     
 class Rule4(ControlRule):
     trigger = 'arrival'
