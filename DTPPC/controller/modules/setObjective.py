@@ -7,6 +7,7 @@ class SetObjective(ControlModule):
     def __init__(self,timeout=180) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
+        sleep(180) #initial timeout
         while True:
             sleep(self.timeout)
             DTname = self._controller.dt.new()

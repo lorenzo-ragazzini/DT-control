@@ -8,10 +8,10 @@ import numpy as np
 
 class SetWIP(ControlModule):
     inputParameters = ['orders']
-    def __init__(self,timeout=600) -> None:
+    def __init__(self,timeout=180) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
-        sleep(10) #initial timeout
+        sleep(120) #initial timeout
         while True:
             input = self._controller.search(self.inputParameters)
             taskResourceInformation = input['orders'].to_dict()
