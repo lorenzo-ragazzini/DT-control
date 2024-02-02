@@ -15,7 +15,7 @@ class DTInterface:
     def interface(self,name,taskResourceInformation,controlUpdate,request):
         headers = {'Content-Type': 'application/json'}
         if type(controlUpdate['ExecuteSchedule']['sequence']) is dict:
-            controlUpdate['ExecuteSchedule']['sequence'] = [controlUpdate['ExecuteSchedule']['sequence'][key] for key in taskResourceInformation['Order'].values()]
+            controlUpdate['ExecuteSchedule']['sequence'] = [controlUpdate['ExecuteSchedule']['sequence'][key] for key in taskResourceInformation['Order'].values() if key in controlUpdate['ExecuteSchedule']['sequence'].keys()]
         inputs = json.dumps({"name":name, "taskResourceInformation":taskResourceInformation, "controlUpdate":controlUpdate, "request":request})
         if self._debug:
             print("Sending request to DT: %s" %inputs)
