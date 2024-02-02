@@ -49,10 +49,10 @@ if __name__ == '__main__':
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
-    if not debug:
+    if debug:
         address="http://127.0.0.1:5000"
     else:
-        address="https://c276-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
+        address="https://a548-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
 
     dt = DTInterface(address) # interface with the DT
     dbc = DBReader(output_file=db_file) # read the ACCDB defined in DBReader class, write db_file
