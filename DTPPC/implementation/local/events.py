@@ -45,11 +45,13 @@ class EventCreator:
             with open(self.output_file,'w') as f:
                 json.dump(self.log,f)
     def run(self,timeout):
-        self.process()
-        sleep(timeout)
+        while True:
+            self.process()
+            sleep(timeout)
     async def run_async(self,timeout):
-        self.process()
-        await asyncio.sleep(timeout)
+        while True:
+            self.process()
+            await asyncio.sleep(timeout)
         
 if __name__ == '__main__':
     log = list()
