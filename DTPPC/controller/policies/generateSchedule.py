@@ -34,10 +34,10 @@ class GenerateSchedule(ControlPolicy):
             DTname = self.controlPolicy._controller.dt.new()
             for i in range(n_individuals):
                 sequence = x[i].astype(int)
-                throughput = self.controlPolicy.fitness_function(sequence,self.taskResourceInformation,DTname)
+                makespan = self.controlPolicy.fitness_function(sequence,self.taskResourceInformation,DTname)
                 # ordered_df = self.df.iloc[order]
                 # throughput = self.instance.fitness_function(ordered_df)
-                fitness_values[i, 0] = (-1.0) * throughput
+                fitness_values[i, 0] = (-1.0) * makespan
             out["F"] = fitness_values
             self.controlPolicy._controller.dt.clear(DTname)
             return fitness_values 
@@ -47,7 +47,7 @@ class GenerateSchedule(ControlPolicy):
         problem = self.OrderOptimizationProblem(self,taskResourceInformation)
         algorithm = GA(pop_size=20,eliminate_duplicates=True,sampling=PermutationRandomSampling(),mutation=InversionMutation(),crossover=OrderCrossover())
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)
-        res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"])
+        res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"],verbose=True)
         sequence = dict(zip(taskResourceInformation['Order'], (res.X+1).tolist()))
         return {"sequence":sequence}
     

@@ -4,7 +4,7 @@ from DTPPC.operationalController import ControlModule
 from DTPPC.controller.misc import genControlUpdate, SimulationRequest
 
 class SetObjective(ControlModule):
-    def __init__(self,timeout=8) -> None:
+    def __init__(self,timeout=180) -> None:
         self.timeout = timeout
     def solve(self,**kwargs):
         while True:
