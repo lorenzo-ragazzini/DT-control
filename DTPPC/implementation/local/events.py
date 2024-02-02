@@ -29,8 +29,7 @@ class EventCreator:
             self.old = new
             e.append('completion')
             e.append('new')
-            return e
-        if len(df) > 0:
+        if len(df) > 1:
             different_columns = df.loc[0].ne(df.loc[1])
             diff_cols = different_columns[different_columns].index.tolist()
             self.old = new
@@ -41,7 +40,8 @@ class EventCreator:
                 order = str(df['ONo'].values[0])+'-'+str(df['OPos'].values[0])
                 print("New production order %s correctely released!" %order)
         else:
-            print("No new events detected...")
+            pass
+            # print("No new events detected...")
         self.old = new.copy(deep=True)
         return e
     def process(self)->None:
