@@ -52,7 +52,7 @@ if __name__ == '__main__':
     if not debug:
         address="http://127.0.0.1:5000"
     else:
-        address="https://1eeb-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
+        address="https://c276-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
 
     dt = DTInterface(address) # interface with the DT
     dbc = DBReader(output_file=db_file) # read the ACCDB defined in DBReader class, write db_file
