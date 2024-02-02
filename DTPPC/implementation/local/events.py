@@ -24,12 +24,14 @@ class EventCreator:
             return e
         if len(new) > len(self.old):
             e.append('arrival')
+            self.old = new.copy(deep=True)
+            return e
         df=pd.concat([self.old,new]).drop_duplicates(keep=False).fillna(0).reset_index()
         if len(df) == 1:
             self.old = new
             e.append('completion')
             e.append('new')
-        if len(df) > 1:
+        elif len(df) > 1:
             different_columns = df.loc[0].ne(df.loc[1])
             diff_cols = different_columns[different_columns].index.tolist()
             self.old = new
