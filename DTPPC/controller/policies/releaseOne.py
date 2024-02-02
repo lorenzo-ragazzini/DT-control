@@ -12,6 +12,9 @@ class ReleaseOne(ControlPolicy):
         sequence = self._controller.decisionVariables['sequence']
         admission = self._controller.decisionVariables['admission']
         if WIP < self.WIPlimit and len(sequence)>0:
+            print(admission)
+            print(sequence)
+            print(min(sequence))
             admission[min(sequence)] = True
             self._controller.systemModel['WIP'] += 1
         return {'admission' : admission}

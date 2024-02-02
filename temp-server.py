@@ -8,6 +8,7 @@ import subprocess
 import webbrowser
   
 if __name__ == "__main__":
+    print("DT server UP")
     port = 5000
     app.dt = DigitalTwin()
     # with open('config.json') as f:

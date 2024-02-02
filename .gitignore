@@ -159,3 +159,6 @@ DTPPC/implementation/flask/front.py
 *.json
 *.xlsx
 *.txt
+dv.json
+log.json
+MESdata.xlsx
