@@ -8,9 +8,8 @@ class ExecuteSchedule(ControlPolicy):
         if len(sequence)>0:
             print(sequence)
             index = min(sequence)
-            try:
+            if index in admission.keys():
                 if admission[index]:
                     admission.pop(index), sequence.pop(index)
-                return {'sequence' : sequence, 'admission' : admission}
-            except:
-                pass
+                    return {'sequence' : sequence, 'admission' : admission}
+            
