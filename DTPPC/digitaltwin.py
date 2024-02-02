@@ -90,8 +90,11 @@ class DigitalTwin():
     def output_analysis(self,request)->dict:
         df = pd.read_csv(fr"{self.output_path}\FinishTimes.csv",sep='\t')
         df.dropna(inplace=True)
-        for col in ['ExitTime','EntryTime','CycleTime']:
-            df[col] = df[col].apply(lambda x: "00:"+x if len(x.split(":"))==2 else ("00:00:"+x if len(x.split(":"))==1 else x))
+        try:
+            for col in ['ExitTime','EntryTime','CycleTime']:
+                df[col] = df[col].apply(lambda x: "00:"+x if len(x.split(":"))==2 else ("00:00:"+x if len(x.split(":"))==1 else x))
+        except:
+            print('err')
         # df["ExitTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
         # df["EntryTime"] = pd.to_datetime(df["ExitTime"],format='%H:%M:%S.%f')
         df["ExitTime"] = pd.to_timedelta(df["ExitTime"])
