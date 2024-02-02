@@ -32,7 +32,10 @@ class SmartController(SmartController):
         dv = super().execute(c)
         print("Controller executed %s with result: %s" %(type(c).__name__,dv))
         if self.actuator and dv:
-            self.actuator.act(dv)
+            try:
+                self.actuator.act(dv)
+            except ValueError:
+                pass
 
 class Rule1(ControlRule):
     trigger = 'new'
