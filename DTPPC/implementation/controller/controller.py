@@ -6,6 +6,7 @@ from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP
 import asyncio
 import time
+import numpy as np
 
 class SmartController(SmartController):
     def __init__(self):
@@ -68,7 +69,10 @@ class Rule3(ControlRule):
 class Rule4(ControlRule):
     trigger = 'arrival'
     def run(self,event):
-        return [FIFODispatchingRule]
+        if np.random.rand()<0.5:
+            return [FIFODispatchingRule]
+        else:
+            return [GenerateSchedule]
     
 class Rule5(ControlRule):
     trigger = 'startUnscheduled'
