@@ -11,10 +11,10 @@ class ReleaseOne(ControlPolicy):
         WIP=kwargs['input']['WIP']
         sequence = self._controller.decisionVariables['sequence']
         admission = self._controller.decisionVariables['admission']
+        for key in admission.keys():
+            admission[key] = True
+        return {'admission' : admission}
         if WIP < self.WIPlimit and len(sequence)>0:
-            print(admission)
-            print(sequence)
-            print(min(sequence))
             admission[min(sequence)] = True
             self._controller.systemModel['WIP'] += 1
         return {'admission' : admission}
