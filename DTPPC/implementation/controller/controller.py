@@ -36,6 +36,8 @@ class SmartController(SmartController):
                 self.actuator.act(dv)
             except ValueError:
                 pass
+            except TypeError:
+                pass
 
 class Rule1(ControlRule):
     trigger = 'new'

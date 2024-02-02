@@ -18,10 +18,10 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
     ''' For compatibility with Windows 7'''
     def get_coroutines():
         coroutines = [
-            dbc.run_async(timeout=2),  # convert MES accdb to xlsx
-            create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=2, ctrl=ctrl),  # create input files & transfers the order to the controller
-            eventCreator.run_async(2),  # read events
-            trigger.run_async(2),  # trigger events
+            dbc.run_async(timeout=1),  # convert MES accdb to xlsx
+            create_files(input_file=db_file, output_file_po=planned_orders_file, output_file_ro=running_orders_file, timeout=1, ctrl=ctrl),  # create input files & transfers the order to the controller
+            # eventCreator.run_async(5),  # read events
+            trigger.run_async(1),  # trigger events
             cloud_upload(running_orders_filename,running_orders_path,cloud_file_path,timeout=5) # upload files to Azure cloud
         ]
         return coroutines

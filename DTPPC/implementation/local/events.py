@@ -22,7 +22,7 @@ class EventCreator:
             e.append('startUnscheduled')
             e.append('start')
             return e
-        if len(new) != len(self.old):
+        if len(new) > len(self.old):
             e.append('arrival')
         df=pd.concat([self.old,new]).drop_duplicates(keep=False).fillna(0).reset_index()
         if len(df) == 1:
