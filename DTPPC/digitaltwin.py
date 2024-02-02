@@ -149,7 +149,10 @@ class DigitalTwin(DigitalTwin):
             dt.plantsim.quit()
             time.sleep(1)
             #it is not base instance, delete files
-            shutil.rmtree(dt.model_path.rsplit('/',1)[0])
+            try:
+                shutil.rmtree(dt.model_path.rsplit('/',1)[0])
+            except PermissionError:
+                print("Warning: could not delete ~temp files of DT instance %s")
         else: 
             # put it back
             self.instances[name] = dt
