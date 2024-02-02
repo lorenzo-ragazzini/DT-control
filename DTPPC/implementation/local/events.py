@@ -37,7 +37,7 @@ class EventCreator:
                 e.append('completion')
                 e.append('new')
             elif 'Start' in diff_cols:
-                order = str(df['ONo'].values[0])+'-'+str(df['OPos'].values[0])
+                order = str(df['ONo'].values[-1])+'-'+str(df['OPos'].values[-1])
                 print("New production order %s correctely released!" %order)
         else:
             pass
