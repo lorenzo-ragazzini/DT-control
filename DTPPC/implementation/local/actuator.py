@@ -36,7 +36,7 @@ class Actuator(DBConnection):
         # debug
         query = f"SELECT PlanedStart FROM tblOrderPos"
         self.cur.execute(query)
-        print(self.cur.fetchall())
+        # print(self.cur.fetchall())
         for key in dv:
             ono, opos = key
             seconds_to_add = dv[key]
@@ -46,14 +46,14 @@ class Actuator(DBConnection):
         #debug
         query = f"SELECT PlanedStart FROM tblOrderPos"
         self.cur.execute(query)
-        print(self.cur.fetchall())
+        # print(self.cur.fetchall())
     def release(self,dv):
         # dv = {"6629-1":True,"6630-1":True}
         dv = self.new_dict(dv)
         # debug
         query = f"SELECT Enabled FROM tblOrder"
         self.cur.execute(query)
-        print(self.cur.fetchall())
+        # print(self.cur.fetchall())
         for key in dv:
             ono, opos = key
             is_enabled = dv[key]
@@ -63,7 +63,7 @@ class Actuator(DBConnection):
         #debug
         query = f"SELECT Enabled FROM tblOrder"
         self.cur.execute(query)
-        print(self.cur.fetchall())
+        # print(self.cur.fetchall())
     '''
     def old_sort(self, dv) -> None:
         self.connect()
