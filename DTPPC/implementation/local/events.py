@@ -33,7 +33,9 @@ class EventCreator:
                 e.append('completion')
                 e.append('new')
             elif 'Start' in diff_cols:
-                pass
+                print("New production order released!")
+        else:
+            print("No new events detected...")
         self.old = new.copy(deep=True)
         return e
     def process(self)->None:
