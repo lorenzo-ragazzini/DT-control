@@ -25,11 +25,11 @@ class EventCreator:
         if len(new) != len(self.old):
             e.append('arrival')
         df=pd.concat([self.old,new]).drop_duplicates(keep=False).fillna(0).reset_index()
-		if len(df) == 1:
-			self.old = new
+        if len(df) == 1:
+            self.old = new
             e.append('completion')
             e.append('new')
-			return e
+            return e
         if len(df) > 0:
             different_columns = df.loc[0].ne(df.loc[1])
             diff_cols = different_columns[different_columns].index.tolist()
@@ -38,8 +38,8 @@ class EventCreator:
                 e.append('completion')
                 e.append('new')
             elif 'Start' in diff_cols:
-			order = str(df['ONo'].values[0])+'-'+str(df['OPos'].values[0])
-                print("New production order %s correctely released!" %s)
+                order = str(df['ONo'].values[0])+'-'+str(df['OPos'].values[0])
+                print("New production order %s correctely released!" %order)
         else:
             print("No new events detected...")
         self.old = new.copy(deep=True)
