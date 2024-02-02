@@ -28,9 +28,9 @@ class SmartController(SmartController):
         import threading
         threading.Thread(target=self.execute_thread,args=(c,)).start()
     def execute_thread(self, c: ControlPolicy):
-        print(type(c).__name__)
+        print("Controller is executing: %s ..." %type(c).__name__)
         dv = super().execute(c)
-        print(dv)
+        print("Controller executed %s with result: %s" %(type(c).__name__,dv))
         if self.actuator and dv:
             self.actuator.act(dv)
 
