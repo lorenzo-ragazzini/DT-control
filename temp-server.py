@@ -23,7 +23,7 @@ if __name__ == "__main__":
         ngrok_process = subprocess.run(["cmd", "/c", "start", "cmd", "/k", command], shell=True)
     # ngrok_process = subprocess.Popen(f'{"C:/Users/Lorenzo/Downloads/ngrok.exe"} http 5000', shell=True, close_fds=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     # webbrowser.open()
-    serve(app, host='127.0.0.1', port=port, expose_tracebacks=True)
+    serve(app, host='127.0.0.1', port=port, expose_tracebacks=True, threads=8)
 
 # the address is available at: (account Google @polimi)
 # https://dashboard.ngrok.com/cloud-edge/endpoints
