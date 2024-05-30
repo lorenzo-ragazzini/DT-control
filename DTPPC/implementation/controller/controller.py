@@ -6,6 +6,7 @@ from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
 from DTPPC.controller import SmartController
 from DTPPC.controller.modules import SetObjective, SetWIP
 import asyncio
+from threading import Thread
 import time
 import numpy as np
 
@@ -28,8 +29,7 @@ class SmartController(SmartController):
         notify("New event: %s"%event, timeout=2)
         super().send(event)
     def execute(self, c: ControlPolicy):
-        import threading
-        threading.Thread(target=self.execute_thread,args=(c,)).start()
+        Thread(target=self.execute_thread,args=(c,)).start()
     def execute_thread(self, c: ControlPolicy):
         notify("Controller is executing %s" %type(c).__name__, timeout=2)
         print("Controller is executing: %s ..." %type(c).__name__)
