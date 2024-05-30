@@ -5,6 +5,7 @@ from typing import Any
 from waitress import serve
 import requests
 import json
+from DTPPC.implementation.popup import notify, popup
 
 app = Flask(__name__)
 app.debug = True
@@ -14,6 +15,7 @@ app.results : dict[str,Any] = dict()
 @app.route('/new',methods=['GET'])
 def new():
     DTname = app.dt.new()
+    notify(title="Digital Twin created",message="Creating Digital Twin instance '%s'"%DTname,timeout=2)
     print('Creating DT instance: %s' %DTname)
     return DTname
     
@@ -27,6 +29,7 @@ def clear():
 def run():
     input = json.loads(request.json)
     name = input.pop('name')
+    popup(title="Digital Twin request",message="DT instance '%s'\nis executing request:\n%s"%(name,input),timeout=5)
     print("Executing request %s on DT %s"%(input,name))
     if request.method == 'POST':
         app.results[name] = app.dt[name].interface(**input)

@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import json
 
+from DTPPC.implementation.popup import popup
 from DTPPC.operationalController import ControlPolicy
 from DTPPC.controller.misc import SimulationRequest
 
@@ -49,6 +50,7 @@ class GenerateSchedule(ControlPolicy):
         termination = DefaultSingleObjectiveTermination(period=50, n_max_gen=10)
         res = minimize(problem,algorithm,termination,seed=1,return_values_of=["F"],verbose=True)
         sequence = dict(zip(taskResourceInformation['Order'], (res.X+1).tolist()))
+        popup(title="Schedule optimization result",message="New optimal sequence:\n%s"%sequence,timeout=5)
         return {"sequence":sequence}
     
 if __name__ == '__main__':

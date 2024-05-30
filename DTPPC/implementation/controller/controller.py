@@ -1,4 +1,5 @@
 from DTPPC.controller.modules.bottleneckPrediction import BottleneckPrediction
+from DTPPC.implementation.popup import notify
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
@@ -24,11 +25,13 @@ class SmartController(SmartController):
     def n_orders(self):
         return len(self.systemModel['orders'])
     async def send_async(self,event):
+        notify("New event: %s"%event, timeout=2)
         super().send(event)
     def execute(self, c: ControlPolicy):
         import threading
         threading.Thread(target=self.execute_thread,args=(c,)).start()
     def execute_thread(self, c: ControlPolicy):
+        notify("Controller is executing %s" %type(c).__name__, timeout=2)
         print("Controller is executing: %s ..." %type(c).__name__)
         dv = super().execute(c)
         print("Controller executed %s with result: %s" %(type(c).__name__,dv))
