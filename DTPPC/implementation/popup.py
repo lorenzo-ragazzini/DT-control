@@ -1,7 +1,5 @@
 import threading
-import time
 import tkinter as tk
-import easygui
 from plyer import notification
 
 def create_self_closing_popup(title, message, image=None, duration=5):
