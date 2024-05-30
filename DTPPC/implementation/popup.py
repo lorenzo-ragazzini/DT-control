@@ -7,7 +7,6 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5.QtCore import QThread, pyqtSignal
 from multiprocessing import Process, Queue
-
 def create_self_closing_popup(title, message, image=None, duration=5, window_width=300, window_height=200, position_right=-1, position_top=-1):
     root = tk.Tk()
     # Set window title
@@ -46,7 +45,42 @@ def popup(title, message="", image=None, timeout=5):
 def notify(title, message=" ", timeout=2):
     notification.notify(title=title, message=message, app_name='DTPPC', timeout=5)
 
+'''
 if platform.system() == 'Windows' and platform.release() == '7':
+    import json
+    from filelock import FileLock
+    import csv
+    class FileQueue:
+        def __init__(self, filename):
+            self.filename = filename
+            self.lock = FileLock(self.filename + ".lock")
+            try:
+                self.get()
+            except FileNotFoundError:
+                with open(self.filename, 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow({})
+
+        def put(self, item):
+            with self.lock:
+                with open(self.filename, 'a', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow([item])
+
+        def get(self):
+            with self.lock:
+                with open(self.filename, 'r+', newline='') as f:
+                    reader = csv.reader(f)
+                    lines = list(reader)
+                    if lines:
+                        item = lines[0]
+                        # Remove the first line
+                        with open(self.filename, 'w', newline='') as f:
+                            writer = csv.writer(f)
+                            writer.writerows(lines[1:])
+                        return item
+                    else:
+                        return None
     class MessageThread(QThread):
         message_signal = pyqtSignal(str)
         def __init__(self, queue):
@@ -55,7 +89,9 @@ if platform.system() == 'Windows' and platform.release() == '7':
         def run(self):
             while True:
                 message = self.queue.get()
-                self.message_signal.emit(message)
+                if message:
+                    self.message_signal.emit(message)
+                time.sleep(0.1)
     class AppDemo(QWidget):
         def __init__(self, queue):
             super().__init__()
@@ -72,11 +108,11 @@ if platform.system() == 'Windows' and platform.release() == '7':
             for i in range(len(self.messages)):
                 self.layout.insertWidget(i, self.messages[i])
     class Logger:
-        def __init__(self):
-            self.queue = Queue()
-            p = Process(target=self.run_app, args=(self.queue,))
-            p.start()
-        def run_app(self,queue):
+        def __init__(self, queue):
+            self.queue = queue
+            self.run_app(self.queue)
+            
+        def run_app(self, queue):
             app = QApplication(sys.argv)
             demo = AppDemo(queue)
             demo.show()
@@ -90,9 +126,9 @@ if platform.system() == 'Windows' and platform.release() == '7':
             else:
                 msg = "%s: %s"%(title, message)
             self.queue.put(msg)
-    
-    logger = Logger()
-    notify = logger.notify
+
+    # logger = Logger()
+    # notify = logger.notify
 
 if __name__ == '__main__':
     input = "ewrwe 34534 fsd \nerewr ere er"
@@ -100,9 +136,7 @@ if __name__ == '__main__':
     # root = notify(title="Digital Twin request",message="DT instance: %s\nis executing request:\n%s"%(name,input),timeout=5)
     # notify(title="Digital Twin request",message="DT instance: %s\nis executing request:\n%s"%(name,input),timeout=5)
     window_height, window_width, position_right, position_top = 200, 300, 0, 0
-
-    logger = Logger()
-    notify = logger.notify
-    notify("1")
-    
-    
+    queue = FileQueue("a.csv")
+    logger = Logger(queue)
+    queue.put(1)
+'''
