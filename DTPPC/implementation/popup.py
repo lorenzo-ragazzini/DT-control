@@ -82,8 +82,13 @@ if platform.system() == 'Windows' and platform.release() == '7':
             demo.show()
             sys.exit(app.exec_())
 
-        def notify(self,title, message, timeout=None):
-            msg = "%s: %s"%(title, message)
+        def notify(self,title="", message="", timeout=None):
+            if not title:
+                msg = message
+            elif not message:
+                msg = title
+            else:
+                msg = "%s: %s"%(title, message)
             self.queue.put(msg)
     
     logger = Logger()
