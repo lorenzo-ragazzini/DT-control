@@ -23,7 +23,7 @@ def create_self_closing_popup(title, message, image=None, timeout=5, window_widt
     frame = tk.Frame(root, relief='raised', borderwidth=2, bg='white')
     frame.pack(fill='both', expand=True)
     # Add the message label
-    label = tk.Label(frame, text=message, font=('Arial', 14), padx=20, pady=20, bg='white', anchor='w', justify='left')
+    label = tk.Label(frame, text=message, font=('Arial', 10), padx=20, pady=20, bg='white', anchor='w', justify='left', wraplength=250)
     label.pack(expand=True)
     # Add the image if provided
     if image:
@@ -36,6 +36,7 @@ def create_self_closing_popup(title, message, image=None, timeout=5, window_widt
     ok_button.pack(pady=10, anchor='e', padx=10)  # Align the button to the right and add padding
     # Close the window after 'timeout' seconds
     root.after(timeout * 1000, root.destroy)
+    root.attributes('-topmost', True)
     root.mainloop()
     return root 
     
