@@ -18,7 +18,11 @@ def post():
     app.items.append(item)
     return redirect(url_for('home'))
 
-def notify(item):
+def notify(title="", message="", app_name='DTPPC', timeout=5):
+    if title and message:
+        item = "%s: %s"%(title,message)
+    else:
+        item = title + message
     response = requests.post('http://localhost:5000/post', data={'item': item})
     return response.status_code
 
