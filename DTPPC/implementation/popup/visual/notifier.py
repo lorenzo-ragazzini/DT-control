@@ -22,10 +22,6 @@ def notify(item):
     response = requests.post('http://localhost:5000/post', data={'item': item})
     return response.status_code
 
-if __name__ != '__main__':
-    thread = threading.Thread(target=logger.run, kwargs={'debug': True})
-    thread.start()
-
 if __name__ == '__main__':
     logger.run(debug=True)
     
