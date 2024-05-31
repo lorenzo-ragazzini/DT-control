@@ -1,5 +1,5 @@
 from DTPPC.controller.modules.bottleneckPrediction import BottleneckPrediction
-from DTPPC.implementation.popup import notify
+from DTPPC.implementation.popup.visual.notifier import notify
 from DTPPC.operationalController import ControlPolicy, ControlMap, ControlModule, ControlRule, OperationalController
 from DTPPC.controller.policies import GenerateSchedule, ExecuteSchedule, ReleaseOne
 from DTPPC.controller.policies.dispatchingRules import FIFODispatchingRule
