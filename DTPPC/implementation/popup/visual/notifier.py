@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, g
 import requests
 import multiprocessing
 import threading
+import time
 
 app = Flask(__name__)
 # app.items = ["Item 1", "Item 2", "Item 3"]
@@ -15,6 +16,8 @@ def home():
 @app.route('/post', methods=['POST'])
 def post():
     item = request.form.get('item')
+    current_time = time.strftime("%H:%M:%S.%f")[:-3]
+    item = f"({current_time}) {item}"
     app.items.append(item)
     return redirect(url_for('home'))
 
