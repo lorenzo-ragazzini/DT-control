@@ -3,19 +3,19 @@ import requests
 import multiprocessing
 import threading
 
-logger = Flask(__name__)
+app = Flask(__name__)
 # app.items = ["Item 1", "Item 2", "Item 3"]
-logger.items = list()
+app.items = list()
 
-@logger.route('/')
+@app.route('/')
 def home():
-    print(logger.items)
-    return render_template('index.html', items=reversed(logger.items))
+    print(app.items)
+    return render_template('index.html', items=reversed(app.items))
 
-@logger.route('/post', methods=['POST'])
+@app.route('/post', methods=['POST'])
 def post():
     item = request.form.get('item')
-    logger.items.append(item)
+    app.items.append(item)
     return redirect(url_for('home'))
 
 def notify(item):
@@ -23,6 +23,6 @@ def notify(item):
     return response.status_code
 
 if __name__ == '__main__':
-    logger.run(debug=True)
+    app.run(debug=True)
     
     
