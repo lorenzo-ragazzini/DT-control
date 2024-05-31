@@ -1,4 +1,6 @@
 import asyncio
+
+import requests
 from DTPPC.implementation.flask.app import app
 from DTPPC.digitaltwin import DigitalTwin
 from DTPPC.implementation.cloud.cloud import download
@@ -17,12 +19,12 @@ if __name__ == "__main__":
     # asyncio.run(download('WorkInProcess.xlsx',input_path,'dt-input/',5))
     loop = asyncio.new_event_loop()
     asyncio.run_coroutine_threadsafe(download('WorkInProcess.txt',input_path,'dt-input/',5),loop)
-    # cannot launch ngrok from here:
-    if False:
-        command = 'ngrok http %s' %port
-        ngrok_process = subprocess.run(["cmd", "/c", "start", "cmd", "/k", command], shell=True)
-    # ngrok_process = subprocess.Popen(f'{"C:/Users/Lorenzo/Downloads/ngrok.exe"} http 5000', shell=True, close_fds=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    # webbrowser.open()
+    # can launch ngrok from here:
+    if True:
+        subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "ngrok", "http", str(port)])
+        response = requests.get('http://localhost:4040/api/tunnels')
+        print("pubblic address: %s"%response.json()["tunnels"][0]["public_url"])
+        print("access code: %s"%response.json()["tunnels"][0]["public_url"].split("://")[1].split("-")[0])
     serve(app, host='127.0.0.1', port=port, expose_tracebacks=True, threads=8)
 
 # the address is available at: (account Google @polimi)

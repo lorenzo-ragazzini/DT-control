@@ -1,4 +1,5 @@
 from os import getcwd
+import subprocess
 import requests
 import asyncio
 from DTPPC.implementation.cloud.cloud import upload as cloud_upload
@@ -12,6 +13,7 @@ from DTPPC.implementation.local.events import EventCreator
 from DTPPC.implementation.local.planned_orders import planned_orders_simplified
 
 import warnings 
+import json
 warnings.filterwarnings('ignore') 
 
 async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orders_path,cloud_file_path):
@@ -37,7 +39,6 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
             new_task = asyncio.create_task(get_coroutines()[index])
             tasks.append(new_task)
 
-		
 if __name__ == '__main__':
     debug:bool = False
     mode:str = "WIN7"
@@ -49,10 +50,20 @@ if __name__ == '__main__':
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
+    
+    subprocess.Popen(["cmd.exe", "/k", "python3.9", "DTPPC/implementation/popup/visual/notifier.py"])
+    
     if debug:
         address="http://127.0.0.1:5000"
     else:
-        address="https://34a3-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
+        try:
+            # Load configuration from config.json file
+            with open('config.json') as f:
+                config = json.load(f)
+            address = config['tunnel_string']
+        except:
+            # manually
+            address="https://34a3-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
 
     dt = DTInterface(address) # interface with the DT
     dbc = DBReader(output_file=db_file) # read the ACCDB defined in DBReader class, write db_file
