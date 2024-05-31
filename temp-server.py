@@ -9,7 +9,7 @@ import webbrowser
   
 if __name__ == "__main__":
     print("DT server UP")
-    port = 5000
+    port = 80
     app.dt = DigitalTwin()
     # with open('config.json') as f:
     #     input_path = json.load(f)['input_path']
