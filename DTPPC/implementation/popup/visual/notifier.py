@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, g
 import requests
 import multiprocessing
+import threading
 
 logger = Flask(__name__)
 # app.items = ["Item 1", "Item 2", "Item 3"]
@@ -22,8 +23,8 @@ def notify(item):
     return response.status_code
 
 if __name__ != '__main__':
-    process = multiprocessing.Process(target=logger.run, kwargs={'debug': True})
-    process.start()
+    thread = threading.Thread(target=logger.run, kwargs={'debug': True})
+    thread.start()
 
 if __name__ == '__main__':
     logger.run(debug=True)
