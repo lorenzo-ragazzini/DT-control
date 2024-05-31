@@ -7,7 +7,7 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5.QtCore import QThread, pyqtSignal
 from multiprocessing import Process, Queue
-def create_self_closing_popup(title, message, image=None, duration=5, window_width=300, window_height=200, position_right=-1, position_top=-1):
+def create_self_closing_popup(title, message, image=None, timeout=5, window_width=300, window_height=200, position_right=-1, position_top=-1):
     root = tk.Tk()
     # Set window title
     root.title(title)
@@ -34,8 +34,8 @@ def create_self_closing_popup(title, message, image=None, duration=5, window_wid
     # Add the OK button
     ok_button = tk.Button(frame, text="      OK      ", command=root.destroy, bg='white')
     ok_button.pack(pady=10, anchor='e', padx=10)  # Align the button to the right and add padding
-    # Close the window after 'duration' seconds
-    root.after(duration * 1000, root.destroy)
+    # Close the window after 'timeout' seconds
+    root.after(timeout * 1000, root.destroy)
     root.mainloop()
     return root 
     
