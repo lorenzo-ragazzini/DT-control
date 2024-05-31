@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import json
 
-from DTPPC.implementation.popup import popup
+from DTPPC.implementation.popup.popup import popup
 from DTPPC.operationalController import ControlPolicy
 from DTPPC.controller.misc import SimulationRequest
 

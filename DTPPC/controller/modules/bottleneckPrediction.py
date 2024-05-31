@@ -26,7 +26,7 @@ class BottleneckPrediction(ControlModule):
             sleep(self.timeout)
             
 
-from DTPPC.implementation.popup import popup
+from DTPPC.implementation.popup.popup import popup
 import io
 import seaborn as sns
 import matplotlib.pyplot as plt

@@ -5,7 +5,7 @@ from typing import Any
 from waitress import serve
 import requests
 import json
-from DTPPC.implementation.popup import notify, popup
+from DTPPC.implementation.popup.popup import notify, popup
 
 app = Flask(__name__)
 app.debug = True
