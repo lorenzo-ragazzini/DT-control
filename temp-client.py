@@ -1,6 +1,5 @@
 from os import getcwd
 import subprocess
-import requests
 import asyncio
 from DTPPC.implementation.cloud.cloud import upload as cloud_upload
 from DTPPC.implementation.controller.trigger import Trigger
@@ -41,21 +40,19 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
 
 if __name__ == '__main__':
     debug:bool = False
-    mode:str = "WIN7"
-    
-    db_file = 'MESdata.xlsx'
-    if debug == True:
-        db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx"
-    
+    system:str = "WIN7"
+    python_version = "3.9"
+      
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
     cloud_file_path = 'dt-input/'
+    running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
+    running_orders_path += "\\"
     
-    subprocess.Popen(["cmd.exe", "/k", "python3.9", "DTPPC/implementation/popup/visual/notifier.py"])
+    subprocess.Popen(["cmd.exe", "/k", python_version, "DTPPC/implementation/popup/visual/notifier.py"])
     
-    if debug:
-        address="http://127.0.0.1:5000"
-    else:
+    if not debug:
+        db_file = 'MESdata.xlsx'
         try:
             # Load configuration from config.json file
             with open('config.json') as f:
@@ -64,29 +61,30 @@ if __name__ == '__main__':
         except:
             # manually
             address="https://34a3-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
+    elif debug:
+        db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx"
+        address="http://127.0.0.1:5000"
 
     dt = DTInterface(address) # interface with the DT
     dbc = DBReader(output_file=db_file) # read the ACCDB defined in DBReader class, write db_file
     eventCreator = EventCreator(db_file,output_file='log.json') # create log.json file listening to events
     trigger = Trigger(db_file) # trigger > self.controller
-   
     ctrl = create_controller() # get preset controller
     act = Actuator() # prints decision variables onto the MES ACCDB
 	
-    ctrl.dt = dt
-    trigger.controller = ctrl
-    ctrl.actuator = act
+    ctrl.dt = dt # connect the controller to the DT
+    trigger.controller = ctrl # connect the trigger to the controller
+    ctrl.actuator = act # connect the controller to the actuator
     
     if debug == True:
+        # support debugging
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
         ctrl.init_dv()
-        # asyncio.run(ctrl.SetWIP.solve())
+    
+        # make experiments
         asyncio.run(ctrl.send("startUnscheduled"))
 
-    running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
-    running_orders_path += "\\"
-
-    if mode == "WIN7":
+    if system == "WIN7":
         loop = asyncio.get_event_loop()
         loop.run_until_complete(run_tasks(db_file,planned_orders_file,running_orders_file,running_orders_path,cloud_file_path))
     else:

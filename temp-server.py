@@ -19,8 +19,9 @@ if __name__ == "__main__":
     threading.Thread(target=download,args=('WorkInProcess.txt',input_path,'dt-input/',5)).start()
     try:
         subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "ngrok", "http", str(port)])
-        time.sleep(3) # wait for ngrok to start
+        time.sleep(5) # wait for ngrok to start
         response = requests.get('http://localhost:4040/api/tunnels')
+        print("ngrok tunnel to the digital twin is open")
         print("pubblic address: %s"%response.json()["tunnels"][0]["public_url"])
         print("access code: %s"%response.json()["tunnels"][0]["public_url"].split("://")[1].split("-")[0])
     except:
