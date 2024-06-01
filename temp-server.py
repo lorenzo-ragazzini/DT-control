@@ -1,5 +1,6 @@
 import asyncio
-
+import threading
+import time
 import requests
 from DTPPC.implementation.flask.app import app
 from DTPPC.digitaltwin import DigitalTwin
@@ -7,24 +8,23 @@ from DTPPC.implementation.cloud.cloud import download
 from waitress import serve
 import json
 import subprocess
-import webbrowser
-  
+
 if __name__ == "__main__":
-    print("DT server UP")
     port = 80
     app.dt = DigitalTwin()
-    # with open('config.json') as f:
-    #     input_path = json.load(f)['input_path']
-    input_path = 'C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB'
-    # asyncio.run(download('WorkInProcess.xlsx',input_path,'dt-input/',5))
-    loop = asyncio.new_event_loop()
-    asyncio.run_coroutine_threadsafe(download('WorkInProcess.txt',input_path,'dt-input/',5),loop)
-    # can launch ngrok from here:
-    if True:
+    print("Digital Twin server started on port %s"%port)
+    with open('config.json') as f:
+        input_path = json.load(f)['input_path']
+        print("input path: %s"%input_path)
+    threading.Thread(target=download,args=('WorkInProcess.txt',input_path,'dt-input/',5)).start()
+    try:
         subprocess.Popen(["cmd.exe", "/c", "start", "cmd.exe", "/k", "ngrok", "http", str(port)])
+        time.sleep(3) # wait for ngrok to start
         response = requests.get('http://localhost:4040/api/tunnels')
         print("pubblic address: %s"%response.json()["tunnels"][0]["public_url"])
         print("access code: %s"%response.json()["tunnels"][0]["public_url"].split("://")[1].split("-")[0])
+    except:
+        print("cannot detect the ngrok address")
     serve(app, host='127.0.0.1', port=port, expose_tracebacks=True, threads=8)
 
 # the address is available at: (account Google @polimi)
