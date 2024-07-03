@@ -19,7 +19,12 @@ class DigitalTwin():
             self.input_path = paths['input_path']
         self.output_filenames = ["FinishTimes.csv","TotEnergyConsumption.csv","Util.csv"]      
     def start(self):
-        self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
+        try:
+            self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
+        except AttributeError:
+            print("Resetting win32com cache")
+            _clean_win32com()
+            self.plantsim = Plantsim(version = '16.0', license_type='Student', trust_models=True)
         self.plantsim.load_model(self.model_path)
         self.plantsim.set_path_context('.Models.Model')
         self.plantsim.set_event_controller()
@@ -174,8 +179,7 @@ def _clean_win32com():
     import win32com
     from os import rename
     path = win32com.__gen_path__
-    path = path.rsplit('\\',1)[0]
-    print(path)
+    shutil.rmtree(path)
 
 if __name__ == '__main__':
     _clean_win32com()
