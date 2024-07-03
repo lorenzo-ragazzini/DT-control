@@ -85,8 +85,7 @@ if __name__ == '__main__':
         # support debugging
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESdebug.xlsx")
         ctrl.init_dv()
-    
-        # make experiments
+        '''This section is for debugging/experimentation purposes only'''
         # asyncio.run(ctrl.send("startUnscheduled"))
         ctrl.send_async("startUnscheduled")
 
