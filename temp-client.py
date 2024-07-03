@@ -81,7 +81,7 @@ if __name__ == '__main__':
     trigger.controller = ctrl # connect the trigger to the controller
     ctrl.actuator = act # connect the controller to the actuator
     
-    if debug_client == True:
+    if debug_client:
         # support debugging
         ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESdebug.xlsx")
         ctrl.init_dv()
