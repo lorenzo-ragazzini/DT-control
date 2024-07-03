@@ -42,7 +42,7 @@ if __name__ == '__main__':
     debug_client:bool = False
     debug_server:bool = False        
     system:str = "WIN7"
-    python_version = "3.9"
+    python_command = "python3.9"
       
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
@@ -50,7 +50,9 @@ if __name__ == '__main__':
     running_orders_path, running_orders_filename = running_orders_file.rsplit('\\',1)
     running_orders_path += "\\"
     
-    subprocess.Popen(["cmd.exe", "/k", python_version, "DTPPC/implementation/popup/visual/notifier.py"])
+    path_to_notifier = "DTPPC/implementation/popup/visual/"
+    command = f'start cmd.exe /k "cd /d {path_to_notifier} && {python_command} notifier.py"'
+    subprocess.Popen(command, shell=True)
     
     if not debug_client:
         db_file = 'MESdata.xlsx'

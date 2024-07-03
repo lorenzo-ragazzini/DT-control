@@ -4,7 +4,6 @@ import requests
 from datetime import datetime
 
 app = Flask(__name__)
-# app.items = ["Item 1", "Item 2", "Item 3"]
 app.items = list()
 
 @app.route('/')
