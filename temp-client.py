@@ -42,7 +42,7 @@ if __name__ == '__main__':
     debug_client:bool = False
     debug_server:bool = False        
     system:str = "WIN7"
-    python_command = "python3.9"
+    python_command = "python"
       
     running_orders_file = getcwd()+'\WorkInProcess.txt'
     planned_orders_file = ''
