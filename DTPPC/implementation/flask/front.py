@@ -10,7 +10,7 @@ class DTInterface:
     def new(self) -> str:
         try:
             return requests.get(self.url+'/new').content.decode()
-        except ConnectionError:
+        except:
             print("Connection error")
     def clear(self,name:str=None):
         data = {'name': name}
@@ -26,6 +26,6 @@ class DTInterface:
             res = requests.post(self.url+'/run', json=inputs, headers=headers)
             # res = requests.get(self.url+'/run',json=inputs,headers=headers) # inutile, ottieni lo stesso risultato
             return json.loads(res.content.decode())
-        except ConnectionError:
+        except:
             print("Connection error")
         

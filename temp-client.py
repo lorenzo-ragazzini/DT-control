@@ -39,7 +39,8 @@ async def run_tasks(db_file,planned_orders_file,running_orders_file,running_orde
             tasks.append(new_task)
 
 if __name__ == '__main__':
-    debug:bool = False
+    debug_client:bool = False
+    debug_server:bool = False        
     system:str = "WIN7"
     python_version = "3.9"
       
@@ -51,8 +52,11 @@ if __name__ == '__main__':
     
     subprocess.Popen(["cmd.exe", "/k", python_version, "DTPPC/implementation/popup/visual/notifier.py"])
     
-    if not debug:
+    if not debug_client:
         db_file = 'MESdata.xlsx'
+    else:
+        db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESdebug.xlsx"
+    if not debug_server:
         try:
             # Load configuration from config.json file
             with open('config.json') as f:
@@ -61,8 +65,7 @@ if __name__ == '__main__':
         except:
             # manually
             address="https://34a3-131-175-147-135.ngrok-free.app" #without final /; if error, wait after starting the server
-    elif debug:
-        db_file = "C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx"
+    else:
         address="http://127.0.0.1:5000"
 
     dt = DTInterface(address) # interface with the DT
@@ -76,13 +79,14 @@ if __name__ == '__main__':
     trigger.controller = ctrl # connect the trigger to the controller
     ctrl.actuator = act # connect the controller to the actuator
     
-    if debug == True:
+    if debug_client == True:
         # support debugging
-        ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESb.xlsx")
+        ctrl.systemModel['orders'] = planned_orders_simplified("C:/Users/Lorenzo/Dropbox (DIG)/Ricerca/GEORGIA TECH/DTbasedcontrol/DB/MESdebug.xlsx")
         ctrl.init_dv()
     
         # make experiments
-        asyncio.run(ctrl.send("startUnscheduled"))
+        # asyncio.run(ctrl.send("startUnscheduled"))
+        ctrl.send_async("startUnscheduled")
 
     if system == "WIN7":
         loop = asyncio.get_event_loop()

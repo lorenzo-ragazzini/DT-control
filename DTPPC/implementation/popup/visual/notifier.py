@@ -1,7 +1,6 @@
+import warnings
 from flask import Flask, render_template, request, redirect, url_for, g
 import requests
-import multiprocessing
-import threading
 from datetime import datetime
 
 app = Flask(__name__)
@@ -26,8 +25,13 @@ def notify(title="", message="", app_name='DTPPC', timeout=5):
         item = "%s: %s"%(title,message)
     else:
         item = title + message
-    response = requests.post('http://localhost:5000/post', data={'item': item})
-    return response.status_code
+    try:
+        response = requests.post('http://localhost:5000/post', data={'item': item})
+        return response.status_code
+    except:
+        print(item)
+        warnings.warn("Cannot connect to the notification server")
+        return 500
 
 if __name__ == '__main__':
     app.run(debug=True)
