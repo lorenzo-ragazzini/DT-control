@@ -2,7 +2,7 @@
 1) Set the correct model path in:
 config.json
 
-1) Run server:
+2) Run server:
 temp-server.py
 
 
